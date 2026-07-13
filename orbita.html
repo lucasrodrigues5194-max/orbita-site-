@@ -6,349 +6,297 @@
 <title>ÓRBITA — uma loja, cinco mundos</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink-950:#0a0b0d;
-    --ink-900:#131418;
-    --ink-800:#1a1c21;
-    --ink-700:#26282e;
-    --line:rgba(238,238,240,.08);
-    --line-strong:rgba(238,238,240,.16);
-    --paper:#eeeef0;
-    --mist:#8e909a;
-    --mist-dim:#5c5e66;
+    --bg:#ffffff;
+    --bg-alt:#f5f5f7;
+    --text:#1d1d1f;
+    --text-secondary:#86868b;
+    --blue:#0071e3;
+    --blue-hover:#0077ed;
+    --line:rgba(0,0,0,.1);
+    --line-soft:rgba(0,0,0,.06);
+    --white:#ffffff;
 
-    --home:#c89b3c;
-    --tech:#4fb8b0;
+    --home:#9c6b17;
+    --tech:#1f8880;
     --car:#c1443b;
-    --office:#8477d6;
-    --travel:#4a9b6e;
+    --office:#5f52c9;
+    --travel:#2f7a52;
 
-    --display: 'Inter Tight', Inter, sans-serif;
-    --body: 'Inter', sans-serif;
-    --mono: 'IBM Plex Mono', monospace;
+    --display:'Inter Tight', Inter, sans-serif;
+    --body:'Inter', sans-serif;
   }
 
   *{margin:0;padding:0;box-sizing:border-box;}
   html{scroll-behavior:smooth;}
   body{
-    background:var(--ink-950);
-    color:var(--paper);
+    background:var(--bg);
+    color:var(--text);
     font-family:var(--body);
     -webkit-font-smoothing:antialiased;
     overflow-x:hidden;
   }
-  ::selection{background:var(--paper);color:var(--ink-950);}
+  ::selection{background:var(--text);color:var(--white);}
   a{color:inherit;text-decoration:none;}
   img{display:block;max-width:100%;}
   button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
 
-  .wrap{max-width:1240px;margin:0 auto;padding:0 40px;}
-  @media (max-width:720px){.wrap{padding:0 22px;}}
+  .wrap{max-width:1160px;margin:0 auto;padding:0 22px;}
+
+  h1,h2,h3{font-family:var(--display);font-weight:600;letter-spacing:-.03em;line-height:1.06;}
 
   .eyebrow{
-    font-family:var(--mono);
-    font-size:11.5px;
-    letter-spacing:.14em;
-    text-transform:uppercase;
-    color:var(--mist);
-    display:flex;align-items:center;gap:10px;
+    font-size:14px;font-weight:600;color:var(--blue);
+    text-transform:uppercase;letter-spacing:.02em;margin-bottom:14px;
   }
-  .eyebrow::before{content:'';width:14px;height:1px;background:var(--mist-dim);}
 
-  h1,h2,h3{font-family:var(--display);font-weight:700;letter-spacing:-.02em;line-height:1.04;}
+  section{padding:120px 0;}
+  .bg-alt{background:var(--bg-alt);}
+
+  .section-head{text-align:center;max-width:640px;margin:0 auto 64px;}
+  .section-head h2{font-size:clamp(30px,4.4vw,50px);margin-bottom:16px;}
+  .section-head p{color:var(--text-secondary);font-size:19px;line-height:1.5;}
+
+  /* ---------- REVEAL ---------- */
+  .reveal{opacity:0;transform:translateY(36px);transition:opacity .9s cubic-bezier(.16,.84,.44,1),transform .9s cubic-bezier(.16,.84,.44,1);}
+  .reveal.in-view{opacity:1;transform:translateY(0);}
+
+  /* ---------- ANNOUNCE ---------- */
+  .announce{
+    background:var(--text);color:var(--white);
+    text-align:center;font-size:12.5px;font-weight:500;letter-spacing:.01em;
+    padding:9px 40px 9px 16px;position:relative;
+  }
+  .announce a{text-decoration:underline;text-underline-offset:2px;}
+  .announce-close{
+    position:absolute;right:14px;top:50%;transform:translateY(-50%);
+    font-size:15px;color:rgba(255,255,255,.6);line-height:1;padding:4px;
+  }
+  .announce-close:hover{color:#fff;}
+  .announce.hidden{display:none;}
 
   /* ---------- NAV ---------- */
   header{
-    position:fixed;top:36px;left:0;right:0;z-index:100;
-    background:rgba(10,11,13,.72);
-    backdrop-filter:blur(14px);
-    border-bottom:1px solid var(--line);
+    position:sticky;top:0;left:0;right:0;z-index:100;
+    background:rgba(255,255,255,.8);
+    backdrop-filter:blur(16px) saturate(1.6);
+    border-bottom:1px solid var(--line-soft);
   }
   nav{
     display:flex;align-items:center;justify-content:space-between;
-    padding:20px 40px;max-width:1240px;margin:0 auto;
+    padding:0 22px;max-width:1160px;margin:0 auto;height:48px;
   }
-  .logo{font-family:var(--display);font-weight:800;font-size:18px;letter-spacing:-.01em;}
-  .nav-links{display:flex;gap:34px;}
+  .logo{font-family:var(--display);font-weight:700;font-size:16px;letter-spacing:-.01em;}
+  .nav-links{display:flex;gap:30px;}
   @media (max-width:860px){.nav-links{display:none;}}
   .nav-links a{
-    font-size:13px;font-weight:500;color:var(--mist);
-    transition:color .2s;position:relative;
+    font-size:12px;font-weight:500;color:var(--text);opacity:.7;
+    transition:opacity .2s;
   }
-  .nav-links a:hover{color:var(--paper);}
-  .nav-cta{
-    font-size:13px;font-weight:600;padding:9px 18px;
-    border:1px solid var(--line-strong);border-radius:100px;
-    transition:border-color .2s,background .2s;
-  }
-  .nav-cta:hover{border-color:var(--paper);background:var(--paper);color:var(--ink-950);}
-
-  /* ---------- HERO ---------- */
-  .hero{
-    padding:216px 0 100px;
-    display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;
-  }
-  @media (max-width:960px){
-    .hero{grid-template-columns:1fr;padding:186px 0 60px;text-align:left;}
-  }
-  .hero-copy .eyebrow{margin-bottom:22px;}
-  .hero h1{font-size:clamp(38px,5vw,60px);margin-bottom:22px;}
-  .hero h1 em{
-    font-style:normal;color:var(--mist-dim);
-  }
-  .hero p.sub{
-    font-size:16.5px;color:var(--mist);max-width:420px;line-height:1.6;margin-bottom:36px;
-  }
-  .hero-actions{display:flex;align-items:center;gap:28px;}
-  .btn-primary{
-    background:var(--paper);color:var(--ink-950);
-    padding:14px 26px;border-radius:100px;font-weight:600;font-size:14px;
-    transition:transform .25s ease, background .25s;
-  }
-  .btn-primary:hover{transform:translateY(-2px);background:#fff;}
-  .link-arrow{
-    font-size:14px;font-weight:500;color:var(--paper);
-    display:inline-flex;align-items:center;gap:8px;
-  }
-  .link-arrow svg{transition:transform .2s;}
-  .link-arrow:hover svg{transform:translateX(4px);}
-
-  .hero-stage{position:relative;height:440px;}
-  #hero-canvas{width:100%;height:100%;}
-  .hero-stage .node-label{
-    position:absolute;font-family:var(--mono);font-size:10.5px;
-    letter-spacing:.06em;color:var(--mist);pointer-events:none;
-    opacity:0;transition:opacity .3s;
-  }
-
-  /* ---------- SECTION HEADS ---------- */
-  .section-head{
-    display:flex;justify-content:space-between;align-items:flex-end;
-    margin-bottom:52px;gap:24px;flex-wrap:wrap;
-  }
-  .section-head h2{font-size:clamp(26px,3vw,34px);}
-  .section-head p{color:var(--mist);font-size:14.5px;max-width:340px;line-height:1.6;}
-
-  section{padding:100px 0;}
-  .divider{border-top:1px solid var(--line);}
-
-  /* ---------- ANNOUNCE BAR ---------- */
-  .announce{
-    position:fixed;top:0;left:0;right:0;z-index:101;
-    background:var(--ink-900);border-bottom:1px solid var(--line);
-    padding:9px 0;overflow:hidden;
-  }
-  .announce-track{
-    display:flex;gap:56px;width:max-content;
-    animation:scroll-x 22s linear infinite;
-  }
-  .announce span{
-    font-family:var(--mono);font-size:11px;letter-spacing:.06em;
-    text-transform:uppercase;color:var(--mist);white-space:nowrap;
-    display:flex;align-items:center;gap:10px;
-  }
-  .announce span strong{color:var(--paper);font-weight:600;}
-
-  /* ---------- NAV EXTRAS ---------- */
+  .nav-links a:hover{opacity:1;}
   .nav-actions{display:flex;align-items:center;gap:20px;}
-  .cart-btn{
-    position:relative;display:flex;align-items:center;gap:8px;
-    font-size:13px;font-weight:500;color:var(--paper);
-  }
-  .cart-btn svg{width:19px;height:19px;}
+  .cart-btn{position:relative;display:flex;align-items:center;color:var(--text);}
+  .cart-btn svg{width:18px;height:18px;}
   .cart-count{
-    position:absolute;top:-9px;right:-11px;background:var(--home);color:var(--ink-950);
-    font-size:10px;font-weight:700;width:17px;height:17px;border-radius:50%;
-    display:flex;align-items:center;justify-content:center;font-family:var(--mono);
+    position:absolute;top:-8px;right:-9px;background:var(--blue);color:#fff;
+    font-size:9.5px;font-weight:700;width:16px;height:16px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
     transition:transform .2s;
   }
   .cart-count.bump{transform:scale(1.3);}
+  .nav-cta{font-size:12px;font-weight:500;color:var(--text);opacity:.7;}
+  .nav-cta:hover{opacity:1;}
 
-  /* ---------- TRUST BAR ---------- */
-  .trust-bar{
-    display:grid;grid-template-columns:repeat(4,1fr);
-    border:1px solid var(--line);border-radius:6px;
-    background:var(--ink-900);
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;padding:150px 0 110px;text-align:center;overflow:hidden;isolation:isolate;
   }
-  @media (max-width:800px){.trust-bar{grid-template-columns:repeat(2,1fr);}}
+  .hero-bg{
+    position:absolute;inset:-20% -10%;z-index:-1;
+    background:
+      radial-gradient(circle at 20% 25%, rgba(0,113,227,.14), transparent 42%),
+      radial-gradient(circle at 82% 15%, rgba(193,68,59,.10), transparent 40%),
+      radial-gradient(circle at 50% 85%, rgba(95,82,201,.12), transparent 45%);
+    animation:drift 22s ease-in-out infinite alternate;
+  }
+  @keyframes drift{
+    from{transform:translate3d(0,0,0) scale(1);}
+    to{transform:translate3d(-2%,2%,0) scale(1.06);}
+  }
+  .hero h1{font-size:clamp(40px,7vw,84px);max-width:920px;margin:0 auto 22px;}
+  .hero h1 span{color:var(--text-secondary);}
+  .hero .sub{
+    font-size:clamp(18px,2.2vw,24px);color:var(--text-secondary);
+    max-width:560px;margin:0 auto 40px;line-height:1.5;font-weight:400;
+  }
+  .hero-actions{display:flex;align-items:center;justify-content:center;gap:28px;flex-wrap:wrap;}
+  .btn-primary{
+    background:var(--blue);color:#fff;
+    padding:13px 26px;border-radius:980px;font-weight:500;font-size:16px;
+    transition:background .2s;display:inline-block;
+  }
+  .btn-primary:hover{background:var(--blue-hover);}
+  .link-chevron{
+    font-size:16px;font-weight:500;color:var(--blue);
+    display:inline-flex;align-items:center;gap:4px;
+  }
+  .link-chevron .chev{transition:transform .2s;}
+  .link-chevron:hover .chev{transform:translateX(3px);}
+
+  /* ---------- TRUST STRIP ---------- */
+  .trust-strip{
+    display:flex;justify-content:center;flex-wrap:wrap;gap:0;
+    border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);
+  }
   .trust-item{
-    display:flex;align-items:center;gap:12px;padding:22px 24px;
-    border-right:1px solid var(--line);
+    flex:1;min-width:200px;text-align:center;padding:28px 20px;
+    border-right:1px solid var(--line-soft);
   }
   .trust-item:last-child{border-right:none;}
-  @media (max-width:800px){.trust-item:nth-child(2n){border-right:none;}
-    .trust-item:nth-child(-n+2){border-bottom:1px solid var(--line);}}
-  .trust-item svg{width:22px;height:22px;flex-shrink:0;color:var(--paper);}
-  .trust-item h6{font-size:13px;font-weight:600;margin-bottom:2px;}
-  .trust-item p{font-size:11.5px;color:var(--mist);}
+  @media (max-width:700px){.trust-item{min-width:50%;}
+    .trust-item:nth-child(2n){border-right:none;}
+    .trust-item:nth-child(-n+2){border-bottom:1px solid var(--line-soft);}}
+  .trust-item h6{font-size:14px;font-weight:600;margin-bottom:3px;}
+  .trust-item p{font-size:12.5px;color:var(--text-secondary);}
+
+  /* ---------- CATEGORIES ---------- */
+  .cat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;}
+  @media (max-width:900px){.cat-grid{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:520px){.cat-grid{grid-template-columns:1fr;}}
+  .cat-card{
+    background:var(--white);border-radius:18px;padding:30px 24px;
+    box-shadow:0 1px 3px rgba(0,0,0,.05), 0 8px 24px rgba(0,0,0,.04);
+    display:flex;flex-direction:column;gap:14px;
+    transition:transform .3s cubic-bezier(.16,.84,.44,1), box-shadow .3s;
+  }
+  .cat-card:hover{transform:translateY(-6px);box-shadow:0 4px 10px rgba(0,0,0,.06), 0 16px 32px rgba(0,0,0,.08);}
+  .cat-dot{width:34px;height:34px;border-radius:50%;background:var(--accent);}
+  .cat-card h3{font-size:20px;}
+  .cat-card p{font-size:13.5px;color:var(--text-secondary);line-height:1.5;flex:1;}
+  .cat-card .cat-go{font-size:13px;font-weight:600;color:var(--accent);display:inline-flex;align-items:center;gap:5px;}
 
   /* ---------- PRODUCTS ---------- */
-  .products-grid{
-    display:grid;grid-template-columns:repeat(4,1fr);gap:20px;
-  }
+  .products-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
   @media (max-width:960px){.products-grid{grid-template-columns:repeat(2,1fr);}}
   @media (max-width:560px){.products-grid{grid-template-columns:1fr;}}
 
   .product-card{
-    border:1px solid var(--line);border-radius:8px;background:var(--ink-900);
-    overflow:hidden;display:flex;flex-direction:column;
-    transition:transform .25s ease,border-color .25s;
+    background:var(--white);border-radius:20px;overflow:hidden;
+    display:flex;flex-direction:column;
+    box-shadow:0 1px 3px rgba(0,0,0,.05), 0 8px 24px rgba(0,0,0,.04);
+    transition:transform .3s cubic-bezier(.16,.84,.44,1), box-shadow .3s;
   }
-  .product-card:hover{transform:translateY(-5px);border-color:var(--line-strong);}
+  .product-card:hover{transform:translateY(-6px);box-shadow:0 4px 10px rgba(0,0,0,.06), 0 18px 34px rgba(0,0,0,.09);}
   .product-media{
-    aspect-ratio:1/1;position:relative;display:flex;align-items:center;justify-content:center;
-    background:#f2f2f4;padding:16px;
+    aspect-ratio:1/1;background:var(--bg-alt);
+    display:flex;align-items:center;justify-content:center;padding:20px;
   }
-  .product-media img{width:100%;height:100%;object-fit:contain;border-radius:4px;}
-  .product-stock{
-    display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--mist);
-  }
-  .product-stock .dot{width:6px;height:6px;border-radius:50%;background:#4a9b6e;flex-shrink:0;}
-  .product-fav{
-    position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:50%;
-    background:rgba(10,11,13,.55);display:flex;align-items:center;justify-content:center;
-  }
-  .product-fav svg{width:15px;height:15px;stroke:var(--paper);}
-  .product-body{padding:16px 18px 20px;display:flex;flex-direction:column;gap:8px;flex:1;}
-  .product-tag{font-family:var(--mono);font-size:10.5px;color:var(--accent);text-transform:uppercase;letter-spacing:.06em;}
-  .product-body h4{font-size:15px;font-weight:600;line-height:1.3;}
-  .product-price{margin-top:6px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;}
-  .product-price .new{font-size:19px;font-weight:700;font-family:var(--display);}
-  .product-installments{font-size:11px;color:var(--mist);}
-  .btn-add{
-    margin-top:14px;width:100%;padding:11px;border-radius:100px;border:1px solid var(--line-strong);
-    font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;
-    transition:background .2s,border-color .2s,color .2s;
-  }
-  .btn-add svg{width:15px;height:15px;}
-  .btn-add:hover{background:var(--paper);color:var(--ink-950);border-color:var(--paper);}
-  .btn-add.added{background:var(--paper);color:var(--ink-950);border-color:var(--paper);}
+  .product-media img{width:100%;height:100%;object-fit:contain;border-radius:8px;}
+  .product-body{padding:20px 22px 24px;display:flex;flex-direction:column;gap:6px;flex:1;}
+  .product-tag{font-size:11.5px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.04em;}
+  .product-body h4{font-size:16px;font-weight:600;line-height:1.3;letter-spacing:-.01em;}
+  .product-stock{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-secondary);margin-top:2px;}
+  .product-stock .dot{width:6px;height:6px;border-radius:50%;background:#3cae5f;flex-shrink:0;}
+  .product-price{margin-top:8px;font-size:19px;font-weight:600;font-family:var(--display);}
+  .product-installments{font-size:12px;color:var(--text-secondary);margin-bottom:8px;}
+  .product-links{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:10px;}
+  .product-links button, .product-links a{font-size:14px;font-weight:500;color:var(--blue);display:inline-flex;align-items:center;gap:3px;}
+  .product-links button.added{color:#3cae5f;}
 
-  /* ---------- TOAST ---------- */
-  .toast{
-    position:fixed;bottom:26px;right:26px;z-index:200;
-    background:var(--paper);color:var(--ink-950);padding:14px 20px;border-radius:8px;
-    font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:10px;
-    transform:translateY(120%);opacity:0;transition:transform .35s ease,opacity .35s ease;
-    box-shadow:0 12px 30px rgba(0,0,0,.35);
-  }
-  .toast.show{transform:translateY(0);opacity:1;}
-  .toast svg{width:16px;height:16px;flex-shrink:0;}
-
-  /* ---------- CATEGORIES ---------- */
-  .cat-grid{
-    display:grid;grid-template-columns:repeat(5,1fr);gap:1px;
-    background:var(--line);border:1px solid var(--line);
-  }
-  @media (max-width:960px){.cat-grid{grid-template-columns:repeat(2,1fr);}}
-  @media (max-width:560px){.cat-grid{grid-template-columns:1fr;}}
-
-  .cat-card{
-    background:var(--ink-950);padding:34px 26px;min-height:260px;
-    display:flex;flex-direction:column;justify-content:space-between;
-    position:relative;overflow:hidden;transition:background .3s;
-  }
-  .cat-card::before{
-    content:'';position:absolute;top:0;left:0;right:0;height:2px;
-    background:var(--accent);transform:scaleX(0);transform-origin:left;
-    transition:transform .35s ease;
-  }
-  .cat-card:hover{background:var(--ink-900);}
-  .cat-card:hover::before{transform:scaleX(1);}
-  .cat-card .cat-index{font-family:var(--mono);font-size:11px;color:var(--mist-dim);}
-  .cat-card h3{font-size:21px;margin:20px 0 8px;}
-  .cat-card p{font-size:13px;color:var(--mist);line-height:1.55;margin-bottom:22px;}
-  .cat-card .cat-go{
-    font-size:12.5px;font-weight:600;display:inline-flex;align-items:center;gap:6px;
-    color:var(--accent);
-  }
-  .cat-card .cat-go svg{transition:transform .2s;}
-  .cat-card:hover .cat-go svg{transform:translateX(3px);}
-
-  /* ---------- FEATURE BLOCKS ---------- */
-  .feature{
-    display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center;
-  }
+  /* ---------- FEATURE ---------- */
+  .feature{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;}
   @media (max-width:900px){.feature{grid-template-columns:1fr;gap:36px;}}
   .feature.reverse .feature-copy{order:2;}
   .feature.reverse .feature-visual{order:1;}
   @media (max-width:900px){.feature.reverse .feature-copy,.feature.reverse .feature-visual{order:initial;}}
-
-  .feature-copy .eyebrow{margin-bottom:18px;}
-  .feature-copy h2{font-size:clamp(24px,3vw,32px);margin-bottom:16px;}
-  .feature-copy p{color:var(--mist);font-size:15px;line-height:1.7;max-width:420px;margin-bottom:28px;}
-  .feature-list{display:flex;flex-direction:column;gap:14px;}
-  .feature-list li{
-    list-style:none;display:flex;gap:12px;font-size:14px;color:var(--paper);align-items:flex-start;
-  }
-  .feature-list li .dot{width:5px;height:5px;border-radius:50%;background:var(--mist-dim);margin-top:7px;flex-shrink:0;}
+  .feature-copy h2{font-size:clamp(28px,3.6vw,42px);margin-bottom:18px;}
+  .feature-copy p{color:var(--text-secondary);font-size:18px;line-height:1.6;max-width:440px;margin-bottom:26px;}
+  .feature-list{display:flex;flex-direction:column;gap:13px;margin-bottom:28px;}
+  .feature-list li{list-style:none;display:flex;gap:11px;font-size:15px;color:var(--text);align-items:flex-start;}
+  .feature-list li svg{width:17px;height:17px;flex-shrink:0;margin-top:2px;color:var(--blue);}
 
   .feature-visual{
-    aspect-ratio:4/3;border:1px solid var(--line);border-radius:4px;
-    background:var(--ink-900);position:relative;overflow:hidden;
+    aspect-ratio:4/3;border-radius:24px;position:relative;overflow:hidden;
+    background:var(--visual-bg, var(--bg-alt));
   }
-  .feature-visual canvas{width:100%;height:100%;display:block;}
+  .feature-visual .blob{
+    position:absolute;inset:-30%;
+    background:radial-gradient(circle at 30% 30%, var(--accent), transparent 60%),
+               radial-gradient(circle at 75% 70%, var(--accent), transparent 55%);
+    opacity:.5;filter:blur(10px);
+    animation:drift 18s ease-in-out infinite alternate;
+  }
 
   /* ---------- GALLERY ---------- */
   .gallery-outer{overflow:hidden;position:relative;}
   .gallery-outer::before,.gallery-outer::after{
     content:'';position:absolute;top:0;bottom:0;width:80px;z-index:2;pointer-events:none;
   }
-  .gallery-outer::before{left:0;background:linear-gradient(90deg,var(--ink-950),transparent);}
-  .gallery-outer::after{right:0;background:linear-gradient(-90deg,var(--ink-950),transparent);}
+  .gallery-outer::before{left:0;background:linear-gradient(90deg,var(--bg-alt),transparent);}
+  .gallery-outer::after{right:0;background:linear-gradient(-90deg,var(--bg-alt),transparent);}
   .gallery-track{display:flex;gap:16px;width:max-content;animation:scroll-x 46s linear infinite;}
   .gallery-outer:hover .gallery-track{animation-play-state:paused;}
   @keyframes scroll-x{from{transform:translateX(0);}to{transform:translateX(-50%);}}
   .gallery-tile{
-    width:260px;height:330px;border:1px solid var(--line);border-radius:3px;
-    background:var(--ink-900);padding:20px;display:flex;flex-direction:column;justify-content:flex-end;
+    width:260px;height:300px;border-radius:20px;background:var(--white);
+    box-shadow:0 1px 3px rgba(0,0,0,.05), 0 8px 24px rgba(0,0,0,.05);
+    padding:22px;display:flex;flex-direction:column;justify-content:flex-end;
     flex-shrink:0;position:relative;
   }
   .gallery-tile .tag{
-    position:absolute;top:18px;left:20px;font-family:var(--mono);font-size:10.5px;
-    letter-spacing:.06em;color:var(--accent);text-transform:uppercase;
+    position:absolute;top:20px;left:22px;font-size:11px;font-weight:600;
+    letter-spacing:.04em;color:var(--accent);text-transform:uppercase;
   }
-  .gallery-tile h4{font-size:15px;font-weight:600;margin-bottom:4px;}
-  .gallery-tile p{font-size:12.5px;color:var(--mist);}
+  .gallery-tile h4{font-size:16px;font-weight:600;margin-bottom:4px;}
+  .gallery-tile p{font-size:13px;color:var(--text-secondary);}
 
   /* ---------- QUOTE ---------- */
-  .quote-section{padding:120px 0;text-align:center;}
-  .quote-mark{font-family:var(--display);font-size:44px;color:var(--mist-dim);line-height:1;margin-bottom:18px;}
+  .quote-section{padding:130px 0;text-align:center;}
   blockquote{
-    font-family:var(--display);font-weight:600;font-size:clamp(22px,3vw,32px);
-    max-width:760px;margin:0 auto 26px;letter-spacing:-.01em;line-height:1.35;
+    font-family:var(--display);font-weight:600;font-size:clamp(24px,3.4vw,38px);
+    max-width:780px;margin:0 auto 24px;letter-spacing:-.02em;line-height:1.3;
     transition:opacity .4s;
   }
-  .quote-author{font-family:var(--mono);font-size:12px;color:var(--mist);letter-spacing:.04em;}
+  .quote-author{font-size:13px;color:var(--text-secondary);letter-spacing:.02em;font-weight:500;}
 
   /* ---------- FOOTER ---------- */
-  footer{border-top:1px solid var(--line);padding:70px 0 34px;}
-  .footer-top{
-    display:grid;grid-template-columns:1.4fr repeat(4,1fr);gap:40px;margin-bottom:70px;
-  }
+  footer{background:var(--bg-alt);border-top:1px solid var(--line-soft);padding:56px 0 24px;}
+  .footer-top{display:grid;grid-template-columns:1.3fr repeat(4,1fr);gap:32px;margin-bottom:44px;}
   @media (max-width:800px){.footer-top{grid-template-columns:repeat(2,1fr);}}
-  .footer-brand p{color:var(--mist);font-size:13.5px;line-height:1.6;max-width:260px;margin-top:14px;}
-  .footer-col h5{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mist-dim);margin-bottom:16px;}
-  .footer-col a{display:block;font-size:13.5px;color:var(--mist);margin-bottom:11px;transition:color .2s;}
-  .footer-col a:hover{color:var(--paper);}
+  .footer-brand p{color:var(--text-secondary);font-size:12.5px;line-height:1.6;max-width:240px;margin-top:12px;}
+  .footer-col h5{font-size:12px;font-weight:600;color:var(--text);margin-bottom:14px;}
+  .footer-col a{display:block;font-size:12.5px;color:var(--text-secondary);margin-bottom:10px;transition:color .2s;}
+  .footer-col a:hover{color:var(--text);}
   .footer-bottom{
     display:flex;justify-content:space-between;align-items:center;
-    padding-top:28px;border-top:1px solid var(--line);
-    font-size:12px;color:var(--mist-dim);flex-wrap:wrap;gap:12px;
+    padding-top:20px;border-top:1px solid var(--line-soft);
+    font-size:11.5px;color:var(--text-secondary);flex-wrap:wrap;gap:10px;
   }
+
+  /* ---------- TOAST ---------- */
+  .toast{
+    position:fixed;bottom:26px;right:26px;z-index:200;
+    background:var(--text);color:#fff;padding:14px 20px;border-radius:12px;
+    font-size:13.5px;font-weight:500;display:flex;align-items:center;gap:10px;
+    transform:translateY(120%);opacity:0;transition:transform .35s ease,opacity .35s ease;
+    box-shadow:0 12px 30px rgba(0,0,0,.2);
+  }
+  .toast.show{transform:translateY(0);opacity:1;}
+  .toast svg{width:16px;height:16px;flex-shrink:0;}
 </style>
 </head>
 <body>
 
-<div class="announce">
-  <div class="announce-track" id="announce-track"></div>
+<div class="announce" id="announce">
+  <span id="announce-text">Frete grátis acima de £ 40 para todo o Reino Unido.</span>
+  <button class="announce-close" id="announce-close" aria-label="Fechar">✕</button>
 </div>
 
 <header>
   <nav>
-    <div class="logo">ÓRBITA</div>
+    <div class="logo">órbita</div>
     <div class="nav-links">
       <a href="#home">Home</a>
       <a href="#tech">Tech</a>
@@ -369,159 +317,130 @@
 
 <main>
   <!-- HERO -->
-  <section class="wrap hero">
-    <div class="hero-copy">
-      <div class="eyebrow">Cinco mundos, uma loja</div>
-      <h1>O ponto de partida<br>para tudo que <em>orbita</em><br>o seu dia.</h1>
-      <p class="sub">Casa, tecnologia, carro, escritório e viagem — organizados em um único lugar, com curadoria e sem enrolação.</p>
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="wrap">
+      <h1>Tudo que <span>orbita</span><br>o seu dia. Num só lugar.</h1>
+      <p class="sub">Casa, tecnologia, carro, escritório e viagem — com curadoria de verdade e sem enrolação.</p>
       <div class="hero-actions">
-        <a href="#categorias" class="btn-primary">Explorar categorias</a>
-        <a href="#como-funciona" class="link-arrow">Como funciona
-          <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" stroke-width="1.4"/></svg>
+        <a href="#produtos" class="btn-primary">Comprar agora</a>
+        <a href="#categorias" class="link-chevron">Explorar categorias
+          <svg class="chev" width="8" height="13" viewBox="0 0 8 13" fill="none"><path d="M1 1l5.5 5.5L1 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
       </div>
     </div>
-    <div class="hero-stage">
-      <canvas id="hero-canvas"></canvas>
-    </div>
   </section>
 
-  <!-- TRUST BAR -->
-  <section class="wrap" style="padding:0 0 70px;">
-    <div class="trust-bar">
-      <div class="trust-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 3v5h-7V8Z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-        <div><h6>Frete grátis</h6><p>Acima de £ 40 para todo o Reino Unido</p></div>
-      </div>
-      <div class="trust-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
-        <div><h6>Parcele em 3x</h6><p>No cartão, sem juros</p></div>
-      </div>
-      <div class="trust-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9"/><path d="M3 4v5h5"/></svg>
-        <div><h6>Troca em 30 dias</h6><p>Sem burocracia, direto com a gente</p></div>
-      </div>
-      <div class="trust-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 6v6c0 5 3.8 8.7 9 10 5.2-1.3 9-5 9-10V6l-9-4Z"/><path d="M9 12l2 2 4-4"/></svg>
-        <div><h6>Compra segura</h6><p>Pagamento criptografado ponta a ponta</p></div>
-      </div>
-    </div>
-  </section>
+  <!-- TRUST STRIP -->
+  <div class="trust-strip">
+    <div class="trust-item"><h6>Frete grátis</h6><p>Acima de £40 no Reino Unido</p></div>
+    <div class="trust-item"><h6>Parcele em 3x</h6><p>No cartão, sem juros</p></div>
+    <div class="trust-item"><h6>Troca em 30 dias</h6><p>Sem burocracia</p></div>
+    <div class="trust-item"><h6>Compra segura</h6><p>Pagamento criptografado</p></div>
+  </div>
 
   <!-- PRODUCTS -->
   <section id="produtos" class="wrap">
-    <div class="section-head">
+    <div class="section-head reveal">
       <h2>Produtos em destaque</h2>
-      <p>Selecionados do catálogo ÓRBITA — direto pra sua cesta, sem enrolação.</p>
+      <p>Selecionados do catálogo ÓRBITA — direto pra sua cesta.</p>
     </div>
-    <div class="products-grid" id="products-grid"></div>
+    <div class="products-grid reveal" id="products-grid"></div>
   </section>
-
-  <div class="wrap divider"></div>
 
   <!-- CATEGORIES -->
   <section id="categorias" class="wrap">
-    <div class="section-head">
+    <div class="section-head reveal">
       <h2>Escolha seu mundo</h2>
       <p>Cinco categorias, cada uma com sua própria curadoria — nada de catálogo genérico.</p>
     </div>
-    <div class="cat-grid">
+    <div class="cat-grid reveal">
       <a href="#" class="cat-card" id="home" style="--accent:var(--home)">
-        <span class="cat-index">01</span>
+        <span class="cat-dot"></span>
         <div>
           <h3>Home</h3>
           <p>Objetos que melhoram a rotina em casa, sem excesso.</p>
         </div>
-        <span class="cat-go">Ver coleção
-          <svg width="12" height="9" viewBox="0 0 14 10" fill="none"><path d="M1 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" stroke-width="1.4"/></svg>
-        </span>
+        <span class="cat-go">Ver coleção ›</span>
       </a>
       <a href="#" class="cat-card" id="tech" style="--accent:var(--tech)">
-        <span class="cat-index">02</span>
+        <span class="cat-dot"></span>
         <div>
           <h3>Tech</h3>
           <p>Acessórios e gadgets testados para o dia a dia real.</p>
         </div>
-        <span class="cat-go">Ver coleção
-          <svg width="12" height="9" viewBox="0 0 14 10" fill="none"><path d="M1 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" stroke-width="1.4"/></svg>
-        </span>
+        <span class="cat-go">Ver coleção ›</span>
       </a>
       <a href="#" class="cat-card" id="car" style="--accent:var(--car)">
-        <span class="cat-index">03</span>
+        <span class="cat-dot"></span>
         <div>
           <h3>Car</h3>
           <p>Itens que fazem o carro funcionar melhor, por mais tempo.</p>
         </div>
-        <span class="cat-go">Ver coleção
-          <svg width="12" height="9" viewBox="0 0 14 10" fill="none"><path d="M1 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" stroke-width="1.4"/></svg>
-        </span>
+        <span class="cat-go">Ver coleção ›</span>
       </a>
       <a href="#" class="cat-card" id="office" style="--accent:var(--office)">
-        <span class="cat-index">04</span>
+        <span class="cat-dot"></span>
         <div>
           <h3>Office</h3>
           <p>Ferramentas de trabalho que aguentam uso pesado.</p>
         </div>
-        <span class="cat-go">Ver coleção
-          <svg width="12" height="9" viewBox="0 0 14 10" fill="none"><path d="M1 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" stroke-width="1.4"/></svg>
-        </span>
+        <span class="cat-go">Ver coleção ›</span>
       </a>
       <a href="#" class="cat-card" id="travel" style="--accent:var(--travel)">
-        <span class="cat-index">05</span>
+        <span class="cat-dot"></span>
         <div>
           <h3>Travel</h3>
           <p>Equipamento leve, resistente e pensado pra estrada.</p>
         </div>
-        <span class="cat-go">Ver coleção
-          <svg width="12" height="9" viewBox="0 0 14 10" fill="none"><path d="M1 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" stroke-width="1.4"/></svg>
-        </span>
+        <span class="cat-go">Ver coleção ›</span>
       </a>
     </div>
   </section>
 
   <!-- FEATURE 1 -->
-  <section id="como-funciona" class="wrap">
-    <div class="feature">
-      <div class="feature-copy">
+  <section class="bg-alt">
+    <div class="wrap feature">
+      <div class="feature-copy reveal">
         <div class="eyebrow">Curadoria</div>
         <h2>Cada produto passa por uma seleção real antes de entrar no catálogo.</h2>
         <p>Nada de listar tudo que existe. A ÓRBITA testa, compara e só publica o que realmente vale o preço — em qualquer um dos cinco mundos.</p>
         <ul class="feature-list">
-          <li><span class="dot"></span>Avaliação técnica antes da publicação</li>
-          <li><span class="dot"></span>Fotos e specs reais, sem promessa vazia</li>
-          <li><span class="dot"></span>Catálogo revisado todo mês</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Avaliação técnica antes da publicação</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Fotos e especificações reais</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Catálogo revisado todo mês</li>
         </ul>
-        <a href="#" class="link-arrow">Ver critério de seleção
-          <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" stroke-width="1.4"/></svg>
+        <a href="#" class="link-chevron">Ver critério de seleção
+          <svg class="chev" width="8" height="13" viewBox="0 0 8 13" fill="none"><path d="M1 1l5.5 5.5L1 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
       </div>
-      <div class="feature-visual"><canvas id="scene-a"></canvas></div>
+      <div class="feature-visual reveal" style="--accent:var(--home);--visual-bg:#fff;"><div class="blob"></div></div>
     </div>
   </section>
 
   <!-- FEATURE 2 -->
-  <section class="wrap">
-    <div class="feature reverse">
-      <div class="feature-copy">
+  <section>
+    <div class="wrap feature reverse">
+      <div class="feature-copy reveal">
         <div class="eyebrow">Logística</div>
         <h2>Entrega rastreada do primeiro ao último quilômetro.</h2>
         <p>Trabalhamos com transportadoras que reportam status real, não estimativa genérica. Você acompanha o pedido de qualquer mundo no mesmo painel.</p>
         <ul class="feature-list">
-          <li><span class="dot"></span>Rastreio unificado pra todos os pedidos</li>
-          <li><span class="dot"></span>Troca facilitada em até 30 dias</li>
-          <li><span class="dot"></span>Suporte direto, sem robô de atendimento</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Rastreio unificado pra todos os pedidos</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Troca facilitada em até 30 dias</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Suporte direto, sem robô de atendimento</li>
         </ul>
-        <a href="#" class="link-arrow">Ver política de entrega
-          <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" stroke-width="1.4"/></svg>
+        <a href="#" class="link-chevron">Ver política de entrega
+          <svg class="chev" width="8" height="13" viewBox="0 0 8 13" fill="none"><path d="M1 1l5.5 5.5L1 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
       </div>
-      <div class="feature-visual"><canvas id="scene-b"></canvas></div>
+      <div class="feature-visual reveal" style="--accent:var(--tech);"><div class="blob"></div></div>
     </div>
   </section>
 
   <!-- GALLERY -->
-  <section>
-    <div class="wrap section-head">
+  <section class="bg-alt">
+    <div class="wrap section-head reveal">
       <h2>Em uso real</h2>
       <p>Clientes usando produtos dos cinco mundos, no dia a dia.</p>
     </div>
@@ -532,8 +451,7 @@
 
   <!-- QUOTE -->
   <section class="wrap quote-section">
-    <div class="quote-mark">"</div>
-    <blockquote id="quote-text">Parei de comprar em cinco lojas diferentes. Hoje é tudo pela ÓRBITA, do carregador ao pneu.</blockquote>
+    <blockquote id="quote-text" class="reveal">Parei de comprar em cinco lojas diferentes. Hoje é tudo pela ÓRBITA, do carregador ao pneu.</blockquote>
     <div class="quote-author" id="quote-author">MARINA ALVES — CLIENTE DESDE 2023</div>
   </section>
 </main>
@@ -542,7 +460,7 @@
   <div class="wrap">
     <div class="footer-top">
       <div class="footer-brand">
-        <div class="logo">ÓRBITA</div>
+        <div class="logo">órbita</div>
         <p>Uma loja, cinco mundos. Home, Tech, Car, Office e Travel — com curadoria de verdade.</p>
       </div>
       <div class="footer-col">
@@ -583,37 +501,21 @@
   <span id="toast-text">Adicionado ao carrinho</span>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 /* ---------------- DATA ---------------- */
-const categories = [
-  {id:'home',   name:'Home',   color:0xc89b3c},
-  {id:'tech',   name:'Tech',   color:0x4fb8b0},
-  {id:'car',    name:'Car',    color:0xc1443b},
-  {id:'office', name:'Office', color:0x8477d6},
-  {id:'travel', name:'Travel', color:0x4a9b6e},
-];
-
 const galleryItems = [
-  {tag:'Home',   title:'Cozinha reorganizada', desc:'Kit de organização — São Paulo'},
-  {tag:'Tech',   title:'Setup de trabalho',    desc:'Suporte de monitor — Curitiba'},
-  {tag:'Car',    title:'Manutenção em dia',    desc:'Kit de limpeza automotiva — Recife'},
-  {tag:'Office', title:'Home office fixo',     desc:'Cadeira ergonômica — Belo Horizonte'},
-  {tag:'Travel', title:'Mochila de trilha',    desc:'Bagagem técnica — Florianópolis'},
-  {tag:'Home',   title:'Iluminação de sala',   desc:'Luminária de piso — Porto Alegre'},
+  {tag:'Home',   title:'Cozinha reorganizada', desc:'Kit de organização — Londres'},
+  {tag:'Tech',   title:'Setup de trabalho',    desc:'Suporte de monitor — Manchester'},
+  {tag:'Car',    title:'Manutenção em dia',    desc:'Kit de limpeza automotiva — Leeds'},
+  {tag:'Office', title:'Home office fixo',     desc:'Cadeira ergonômica — Birmingham'},
+  {tag:'Travel', title:'Mochila de trilha',    desc:'Bagagem técnica — Bristol'},
+  {tag:'Home',   title:'Iluminação de sala',   desc:'Luminária de piso — Glasgow'},
 ];
 
 const quotes = [
   {text:'Parei de comprar em cinco lojas diferentes. Hoje é tudo pela ÓRBITA, do carregador ao pneu.', author:'MARINA ALVES — CLIENTE DESDE 2023'},
   {text:'A curadoria é o diferencial. Nunca recebi um produto que não bateu com a descrição.', author:'THIAGO ROCHA — CLIENTE DESDE 2024'},
   {text:'O rastreio unificado economiza um tempo absurdo quando comprei pra casa e pro carro juntos.', author:'ISABELA COSTA — CLIENTE DESDE 2022'},
-];
-
-const promoMessages = [
-  'Frete grátis acima de £ 40',
-  'Parcele em 3x sem juros no cartão',
-  'Troca em até 30 dias, sem burocracia',
-  'Novidades toda semana nos cinco mundos',
 ];
 
 const products = [
@@ -630,27 +532,24 @@ function formatGBP(v){
 
 /* ---------------- PRODUCTS RENDER ---------------- */
 const productsGrid = document.getElementById('products-grid');
-products.forEach((p, i)=>{
+products.forEach((p)=>{
   const el = document.createElement('div');
   el.className = 'product-card';
   const installments = (p.price/3).toLocaleString('en-GB', {minimumFractionDigits:2, maximumFractionDigits:2});
   el.innerHTML = `
     <div class="product-media">
-      <span class="product-fav"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg></span>
       <img src="${p.img}" alt="${p.name}" loading="lazy">
     </div>
     <div class="product-body">
       <span class="product-tag" style="color:${p.accent}">${p.cat}</span>
       <h4>${p.name}</h4>
       <div class="product-stock"><span class="dot"></span>Em estoque</div>
-      <div class="product-price">
-        <span class="new">£ ${formatGBP(p.price)}</span>
-      </div>
+      <div class="product-price">£ ${formatGBP(p.price)}</div>
       <span class="product-installments">ou 3x de £ ${installments}</span>
-      <button class="btn-add" data-name="${p.name}" type="button">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-        Adicionar
-      </button>
+      <div class="product-links">
+        <a href="#" class="link-details">Saiba mais ›</a>
+        <button class="btn-add" data-name="${p.name}" type="button">Comprar ›</button>
+      </div>
     </div>`;
   productsGrid.appendChild(el);
 });
@@ -675,16 +574,17 @@ function addToCart(name, btn){
   toastTimer = setTimeout(()=> toast.classList.remove('show'), 2600);
 
   if(btn){
-    const original = btn.innerHTML;
+    const original = btn.textContent;
     btn.classList.add('added');
-    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Adicionado`;
-    setTimeout(()=>{ btn.classList.remove('added'); btn.innerHTML = original; }, 1400);
+    btn.textContent = 'Adicionado ✓';
+    setTimeout(()=>{ btn.classList.remove('added'); btn.textContent = original; }, 1400);
   }
 }
 
 productsGrid.addEventListener('click', (e)=>{
   const btn = e.target.closest('.btn-add');
   if(!btn) return;
+  e.preventDefault();
   addToCart(btn.dataset.name, btn);
 });
 
@@ -695,12 +595,9 @@ document.getElementById('cart-btn').addEventListener('click', ()=>{
   toastTimer = setTimeout(()=> toast.classList.remove('show'), 2600);
 });
 
-/* ---------------- ANNOUNCE BAR RENDER ---------------- */
-const announceTrack = document.getElementById('announce-track');
-[...promoMessages, ...promoMessages].forEach(msg=>{
-  const span = document.createElement('span');
-  span.innerHTML = `<strong>ÓRBITA</strong> ${msg}`;
-  announceTrack.appendChild(span);
+/* ---------------- ANNOUNCE CLOSE ---------------- */
+document.getElementById('announce-close').addEventListener('click', ()=>{
+  document.getElementById('announce').classList.add('hidden');
 });
 
 /* ---------------- GALLERY RENDER ---------------- */
@@ -730,141 +627,17 @@ setInterval(()=>{
   },400);
 },5000);
 
-/* ---------------- HERO 3D — ORBITAL EMBLEM ---------------- */
-(function(){
-  const canvas = document.getElementById('hero-canvas');
-  const stage = canvas.parentElement;
-  const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
-  camera.position.set(0, 0.6, 7);
-
-  function resize(){
-    const w = stage.clientWidth, h = stage.clientHeight;
-    renderer.setSize(w, h);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
-    camera.aspect = w/h;
-    camera.updateProjectionMatrix();
-  }
-  window.addEventListener('resize', resize);
-
-  // lighting — soft, matte, no bloom
-  scene.add(new THREE.AmbientLight(0xffffff, 0.55));
-  const key = new THREE.DirectionalLight(0xffffff, 0.9);
-  key.position.set(4,5,6);
-  scene.add(key);
-  const rim = new THREE.DirectionalLight(0x8aa4ff, 0.35);
-  rim.position.set(-5,-2,-4);
-  scene.add(rim);
-
-  const group = new THREE.Group();
-  scene.add(group);
-
-  // core sphere
-  const core = new THREE.Mesh(
-    new THREE.IcosahedronGeometry(1, 2),
-    new THREE.MeshStandardMaterial({color:0xeeeef0, roughness:0.4, metalness:0.15, flatShading:true})
-  );
-  group.add(core);
-
-  // thin ring
-  const ring = new THREE.Mesh(
-    new THREE.TorusGeometry(2.35, 0.012, 16, 128),
-    new THREE.MeshStandardMaterial({color:0x5c5e66, roughness:0.6})
-  );
-  ring.rotation.x = Math.PI/2.3;
-  group.add(ring);
-
-  // orbit nodes
-  const nodes = [];
-  categories.forEach((cat, i) => {
-    const angle = (i / categories.length) * Math.PI * 2;
-    const mesh = new THREE.Mesh(
-      new THREE.SphereGeometry(0.16, 24, 24),
-      new THREE.MeshStandardMaterial({color:cat.color, roughness:0.35, metalness:0.1})
-    );
-    mesh.userData = {angle, radius:2.35, speed:0.12 + i*0.01, id:cat.id};
-    group.add(mesh);
-    nodes.push(mesh);
+/* ---------------- SCROLL REVEAL ---------------- */
+const revealEls = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.classList.add('in-view');
+      io.unobserve(entry.target);
+    }
   });
-
-  group.rotation.x = 0.15;
-
-  let mouseX = 0, mouseY = 0;
-  stage.addEventListener('mousemove', (e)=>{
-    const r = stage.getBoundingClientRect();
-    mouseX = ((e.clientX - r.left) / r.width - 0.5);
-    mouseY = ((e.clientY - r.top) / r.height - 0.5);
-  });
-
-  const clock = new THREE.Clock();
-  function animate(){
-    requestAnimationFrame(animate);
-    const t = clock.getElapsedTime();
-
-    group.rotation.y += 0.0016;
-    group.rotation.y += (mouseX*0.25 - (group.rotation.y%(Math.PI*2))*0) * 0.002;
-    group.rotation.x += ((0.15 + mouseY*0.15) - group.rotation.x) * 0.03;
-
-    core.rotation.y += 0.002;
-    core.rotation.x += 0.0009;
-
-    nodes.forEach(n=>{
-      const a = n.userData.angle + t*n.userData.speed;
-      n.position.x = Math.cos(a)*n.userData.radius;
-      n.position.z = Math.sin(a)*n.userData.radius;
-      n.position.y = Math.sin(a*2)*0.12;
-    });
-
-    renderer.render(scene, camera);
-  }
-  resize();
-  animate();
-})();
-
-/* ---------------- FEATURE VISUALS — simple abstract geo ---------------- */
-function mountMiniScene(canvasId, geometry, color){
-  const canvas = document.getElementById(canvasId);
-  const stage = canvas.parentElement;
-  const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
-  camera.position.set(0,0,5);
-
-  scene.add(new THREE.AmbientLight(0xffffff, 0.5));
-  const key = new THREE.DirectionalLight(0xffffff, 1);
-  key.position.set(3,4,5);
-  scene.add(key);
-
-  const mesh = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({color, roughness:0.45, metalness:0.1, flatShading:true}));
-  scene.add(mesh);
-
-  const wire = new THREE.LineSegments(
-    new THREE.EdgesGeometry(geometry),
-    new THREE.LineBasicMaterial({color:0xeeeef0, transparent:true, opacity:0.12})
-  );
-  mesh.add(wire);
-
-  function resize(){
-    const w = stage.clientWidth, h = stage.clientHeight;
-    renderer.setSize(w,h);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
-    camera.aspect = w/h;
-    camera.updateProjectionMatrix();
-  }
-  window.addEventListener('resize', resize);
-  resize();
-
-  function animate(){
-    requestAnimationFrame(animate);
-    mesh.rotation.y += 0.0032;
-    mesh.rotation.x += 0.0012;
-    renderer.render(scene,camera);
-  }
-  animate();
-}
-mountMiniScene('scene-a', new THREE.IcosahedronGeometry(1.3, 0), 0xc89b3c);
-mountMiniScene('scene-b', new THREE.OctahedronGeometry(1.4, 0), 0x4fb8b0);
+}, {threshold:.15, rootMargin:'0px 0px -60px 0px'});
+revealEls.forEach(el=> io.observe(el));
 </script>
 </body>
 </html>
