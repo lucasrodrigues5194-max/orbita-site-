@@ -114,13 +114,13 @@
   /* ---------- HERO ---------- */
   .hero{position:relative;background:var(--hero-dark);overflow:hidden;}
   .hero-media{position:absolute;inset:0;}
-  @media (max-width:760px){.hero-media{opacity:.45;}}
+  @media (max-width:760px){.hero-media{opacity:.95;}}
   .hero-media canvas{width:100%;height:100%;display:block;}
   .hero-overlay{
     position:absolute;inset:0;
     background:linear-gradient(90deg, var(--hero-dark) 0%, var(--hero-dark) 34%, rgba(5,6,10,.6) 56%, rgba(5,6,10,.15) 78%, transparent 94%);
   }
-  @media (max-width:760px){.hero-overlay{background:linear-gradient(180deg, rgba(5,6,10,.5) 0%, var(--hero-dark) 60%);}}
+  @media (max-width:760px){.hero-overlay{background:linear-gradient(180deg, var(--hero-dark) 0%, rgba(5,6,10,.8) 32%, rgba(5,6,10,.35) 46%, transparent 62%);}}
   .hero-content{position:relative;z-index:2;padding:96px 0 84px;}
   .hero-content .eyebrow{color:rgba(255,255,255,.55);}
   .hero h1{color:#fff;font-size:clamp(38px,6vw,72px);max-width:600px;margin-bottom:22px;}
@@ -687,13 +687,28 @@ revealEls.forEach(el=> io.observe(el));
   renderer.setClearColor(0x000000, 0);
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
-  camera.position.set(0, 0.3, 9.5);
+
+  const group = new THREE.Group();
+  group.rotation.x = 0.08;
+  scene.add(group);
 
   function resize(){
     const w = stage.clientWidth, h = stage.clientHeight;
     renderer.setSize(w, h);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    camera.aspect = w / h;
+    const aspect = w / h;
+    camera.aspect = aspect;
+    if(aspect < 0.95){
+      // narrow / mobile viewport — centre the scene, drop it below the copy, back the camera way off so the whole planet fits in frame
+      group.position.x = 0;
+      group.position.y = -1.6;
+      camera.position.set(0, 0.6, Math.max(20, 8 / aspect));
+    } else {
+      group.position.y = 0;
+      // wide / desktop viewport — offset right so the planet sits behind the copy
+      group.position.x = Math.min(3.1, aspect * 1.9);
+      camera.position.set(0, 0.3, 9.5);
+    }
     camera.updateProjectionMatrix();
   }
   window.addEventListener('resize', resize);
@@ -705,11 +720,6 @@ revealEls.forEach(el=> io.observe(el));
   const rim = new THREE.DirectionalLight(0x8b6cf6, 1.1);
   rim.position.set(5, -2, -3);
   scene.add(rim);
-
-  const group = new THREE.Group();
-  group.position.x = 3.1;
-  group.rotation.x = 0.08;
-  scene.add(group);
 
   const planet = new THREE.Mesh(
     new THREE.IcosahedronGeometry(2.1, 4),
