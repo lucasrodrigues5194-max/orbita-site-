@@ -744,32 +744,102 @@ revealEls.forEach(el=> io.observe(el));
   const stars = new THREE.Points(starGeo, new THREE.PointsMaterial({color:0xffffff, size:0.045, transparent:true, opacity:0.65}));
   scene.add(stars);
 
-  // orbiting product cards
-  const loader = new THREE.TextureLoader();
-  const cardDefs = [
-    {img:'assets/ugreen.jpg', color:0x1f8880},
-    {img:'assets/baseus-earbuds.jpg', color:0x1f8880},
-    {img:'assets/baseus-car-holder.jpg', color:0xc1443b},
-    {img:'assets/baseus-usb-hub.jpg', color:0x1f8880},
-    {img:'assets/lencent-adapter.jpg', color:0x2f7a52},
+  // orbiting category icons — simple stylised 3D shapes, one per world
+  function makeMat(color){
+    return new THREE.MeshStandardMaterial({color, roughness:0.32, metalness:0.4});
+  }
+
+  function buildTechIcon(color){ // headphones
+    const mat = makeMat(color);
+    const g = new THREE.Group();
+    const band = new THREE.Mesh(new THREE.TorusGeometry(0.4, 0.045, 14, 32, Math.PI), mat);
+    band.rotation.z = Math.PI;
+    g.add(band);
+    const cupGeo = new THREE.CylinderGeometry(0.14, 0.14, 0.11, 18);
+    const cupL = new THREE.Mesh(cupGeo, mat); cupL.position.set(-0.4, -0.02, 0); cupL.rotation.z = Math.PI/2; g.add(cupL);
+    const cupR = cupL.clone(); cupR.position.x = 0.4; g.add(cupR);
+    return g;
+  }
+
+  function buildHomeIcon(color){ // little house
+    const mat = makeMat(color);
+    const g = new THREE.Group();
+    const base = new THREE.Mesh(new THREE.BoxGeometry(0.58, 0.4, 0.5), mat);
+    base.position.y = -0.08;
+    g.add(base);
+    const roof = new THREE.Mesh(new THREE.ConeGeometry(0.46, 0.36, 4), mat);
+    roof.rotation.y = Math.PI/4;
+    roof.position.y = 0.28;
+    g.add(roof);
+    return g;
+  }
+
+  function buildCarIcon(color){ // car silhouette
+    const mat = makeMat(color);
+    const g = new THREE.Group();
+    const body = new THREE.Mesh(new THREE.BoxGeometry(0.88, 0.26, 0.4), mat);
+    g.add(body);
+    const cabin = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.22, 0.36), mat);
+    cabin.position.y = 0.22;
+    g.add(cabin);
+    const wheelGeo = new THREE.CylinderGeometry(0.1, 0.1, 0.44, 14);
+    [-0.28, 0.28].forEach(x=>{
+      const w = new THREE.Mesh(wheelGeo, mat);
+      w.rotation.x = Math.PI/2;
+      w.position.set(x, -0.16, 0);
+      g.add(w);
+    });
+    return g;
+  }
+
+  function buildOfficeIcon(color){ // briefcase
+    const mat = makeMat(color);
+    const g = new THREE.Group();
+    const body = new THREE.Mesh(new THREE.BoxGeometry(0.66, 0.42, 0.16), mat);
+    g.add(body);
+    const handle = new THREE.Mesh(new THREE.TorusGeometry(0.13, 0.028, 10, 20, Math.PI), mat);
+    handle.position.y = 0.24;
+    handle.rotation.z = Math.PI;
+    g.add(handle);
+    return g;
+  }
+
+  function buildTravelIcon(color){ // suitcase
+    const mat = makeMat(color);
+    const g = new THREE.Group();
+    const body = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.62, 0.26), mat);
+    g.add(body);
+    const handle = new THREE.Mesh(new THREE.TorusGeometry(0.11, 0.024, 10, 20, Math.PI), mat);
+    handle.position.y = 0.4;
+    handle.rotation.z = Math.PI;
+    g.add(handle);
+    return g;
+  }
+
+  const iconDefs = [
+    {build:buildTechIcon,    color:0x1f8880},
+    {build:buildHomeIcon,    color:0x9c6b17},
+    {build:buildCarIcon,     color:0xc1443b},
+    {build:buildOfficeIcon,  color:0x5f52c9},
+    {build:buildTravelIcon,  color:0x2f7a52},
   ];
   const cards = [];
-  cardDefs.forEach((def, i)=>{
-    const tex = loader.load(def.img);
-    const frame = new THREE.Mesh(
-      new THREE.PlaneGeometry(1.0, 1.0),
-      new THREE.MeshBasicMaterial({color:def.color})
+  iconDefs.forEach((def, i)=>{
+    const glow = new THREE.Mesh(
+      new THREE.CircleGeometry(0.5, 24),
+      new THREE.MeshBasicMaterial({color:def.color, transparent:true, opacity:0.14})
     );
-    const photo = new THREE.Mesh(
-      new THREE.PlaneGeometry(0.86, 0.86),
-      new THREE.MeshBasicMaterial({map:tex})
-    );
-    photo.position.z = 0.01;
+    const icon = def.build(def.color);
     const pivot = new THREE.Group();
-    pivot.add(frame);
-    pivot.add(photo);
-    const angle = (i / cardDefs.length) * Math.PI * 2;
-    pivot.userData = {angle, radius:3.0, speed:0.14 + i*0.018};
+    pivot.add(glow);
+    pivot.add(icon);
+    const angle = (i / iconDefs.length) * Math.PI * 2;
+    pivot.userData = {
+      angle, radius:3.0, speed:0.14 + i*0.018,
+      spinX: 0.006 + Math.random()*0.01,
+      spinY: 0.01 + Math.random()*0.014,
+    };
+    icon.rotation.set(Math.random()*Math.PI, Math.random()*Math.PI, 0);
     group.add(pivot);
     cards.push(pivot);
   });
@@ -796,7 +866,10 @@ revealEls.forEach(el=> io.observe(el));
       c.position.x = Math.cos(a) * c.userData.radius;
       c.position.z = Math.sin(a) * c.userData.radius * 0.55;
       c.position.y = Math.sin(a*1.3) * 0.6;
-      c.lookAt(camera.position);
+      const glow = c.children[0], icon = c.children[1];
+      glow.lookAt(camera.position);
+      icon.rotation.x += c.userData.spinX;
+      icon.rotation.y += c.userData.spinY;
     });
 
     stars.rotation.y += 0.00008;
