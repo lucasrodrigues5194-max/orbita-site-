@@ -113,12 +113,12 @@
 
   /* ---------- HERO ---------- */
   .hero{position:relative;background:var(--hero-dark);overflow:hidden;}
-  .hero-media{position:absolute;top:0;right:0;bottom:0;width:64%;}
-  @media (max-width:760px){.hero-media{width:100%;opacity:.35;}}
-  .hero-media img{width:100%;height:100%;object-fit:cover;object-position:left center;}
+  .hero-media{position:absolute;inset:0;}
+  @media (max-width:760px){.hero-media{opacity:.45;}}
+  .hero-media canvas{width:100%;height:100%;display:block;}
   .hero-overlay{
     position:absolute;inset:0;
-    background:linear-gradient(90deg, var(--hero-dark) 0%, var(--hero-dark) 28%, rgba(5,6,10,.55) 52%, rgba(5,6,10,.1) 76%, transparent 92%);
+    background:linear-gradient(90deg, var(--hero-dark) 0%, var(--hero-dark) 34%, rgba(5,6,10,.6) 56%, rgba(5,6,10,.15) 78%, transparent 94%);
   }
   @media (max-width:760px){.hero-overlay{background:linear-gradient(180deg, rgba(5,6,10,.5) 0%, var(--hero-dark) 60%);}}
   .hero-content{position:relative;z-index:2;padding:96px 0 84px;}
@@ -329,7 +329,7 @@
 <main>
   <!-- HERO -->
   <section class="hero">
-    <div class="hero-media"><img src="assets/hero-orbit.jpg" alt="Products orbiting a planet"></div>
+    <div class="hero-media"><canvas id="hero-canvas"></canvas></div>
     <div class="hero-overlay"></div>
     <div class="wrap hero-content">
       <div class="eyebrow">Best selling products</div>
@@ -540,6 +540,7 @@
   <span id="toast-text">Added to cart</span>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 /* ---------------- DATA ---------------- */
 const galleryItems = [
@@ -677,6 +678,134 @@ const io = new IntersectionObserver((entries)=>{
   });
 }, {threshold:.15, rootMargin:'0px 0px -60px 0px'});
 revealEls.forEach(el=> io.observe(el));
+
+/* ---------------- HERO 3D — ORBITING PLANET ---------------- */
+(function(){
+  const canvas = document.getElementById('hero-canvas');
+  const stage = canvas.parentElement;
+  const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+  renderer.setClearColor(0x000000, 0);
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+  camera.position.set(0, 0.3, 9.5);
+
+  function resize(){
+    const w = stage.clientWidth, h = stage.clientHeight;
+    renderer.setSize(w, h);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+  window.addEventListener('resize', resize);
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.38));
+  const key = new THREE.DirectionalLight(0xbfd0ff, 1.6);
+  key.position.set(-6, 3, 4);
+  scene.add(key);
+  const rim = new THREE.DirectionalLight(0x8b6cf6, 1.1);
+  rim.position.set(5, -2, -3);
+  scene.add(rim);
+
+  const group = new THREE.Group();
+  group.position.x = 3.1;
+  group.rotation.x = 0.08;
+  scene.add(group);
+
+  const planet = new THREE.Mesh(
+    new THREE.IcosahedronGeometry(2.1, 4),
+    new THREE.MeshStandardMaterial({color:0x1c2030, roughness:0.8, metalness:0.2})
+  );
+  group.add(planet);
+
+  const glow = new THREE.Mesh(
+    new THREE.SphereGeometry(2.2, 32, 32),
+    new THREE.MeshBasicMaterial({color:0x4f8bf7, transparent:true, opacity:0.07, side:THREE.BackSide})
+  );
+  group.add(glow);
+
+  const ring = new THREE.Mesh(
+    new THREE.TorusGeometry(3.6, 0.018, 16, 160),
+    new THREE.MeshStandardMaterial({color:0x8b6cf6, emissive:0x4f8bf7, emissiveIntensity:1.3, roughness:0.4})
+  );
+  ring.rotation.x = Math.PI / 2.4;
+  ring.rotation.z = 0.15;
+  group.add(ring);
+
+  // starfield
+  const starCount = 650;
+  const starPositions = new Float32Array(starCount * 3);
+  for(let i = 0; i < starCount; i++){
+    starPositions[i*3]   = (Math.random()-0.5) * 32;
+    starPositions[i*3+1] = (Math.random()-0.5) * 20;
+    starPositions[i*3+2] = (Math.random()-0.5) * 18 - 4;
+  }
+  const starGeo = new THREE.BufferGeometry();
+  starGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+  const stars = new THREE.Points(starGeo, new THREE.PointsMaterial({color:0xffffff, size:0.045, transparent:true, opacity:0.65}));
+  scene.add(stars);
+
+  // orbiting product cards
+  const loader = new THREE.TextureLoader();
+  const cardDefs = [
+    {img:'assets/ugreen.jpg', color:0x1f8880},
+    {img:'assets/baseus-earbuds.jpg', color:0x1f8880},
+    {img:'assets/baseus-car-holder.jpg', color:0xc1443b},
+    {img:'assets/baseus-usb-hub.jpg', color:0x1f8880},
+    {img:'assets/lencent-adapter.jpg', color:0x2f7a52},
+  ];
+  const cards = [];
+  cardDefs.forEach((def, i)=>{
+    const tex = loader.load(def.img);
+    const frame = new THREE.Mesh(
+      new THREE.PlaneGeometry(1.0, 1.0),
+      new THREE.MeshBasicMaterial({color:def.color})
+    );
+    const photo = new THREE.Mesh(
+      new THREE.PlaneGeometry(0.86, 0.86),
+      new THREE.MeshBasicMaterial({map:tex})
+    );
+    photo.position.z = 0.01;
+    const pivot = new THREE.Group();
+    pivot.add(frame);
+    pivot.add(photo);
+    const angle = (i / cardDefs.length) * Math.PI * 2;
+    pivot.userData = {angle, radius:3.0, speed:0.14 + i*0.018};
+    group.add(pivot);
+    cards.push(pivot);
+  });
+
+  let mouseX = 0, mouseY = 0;
+  stage.addEventListener('mousemove', (e)=>{
+    const r = stage.getBoundingClientRect();
+    mouseX = ((e.clientX - r.left) / r.width - 0.5);
+    mouseY = ((e.clientY - r.top) / r.height - 0.5);
+  });
+
+  const clock = new THREE.Clock();
+  function animate(){
+    requestAnimationFrame(animate);
+    const t = clock.getElapsedTime();
+
+    planet.rotation.y += 0.0016;
+    ring.rotation.z += 0.0009;
+    group.rotation.y += (mouseX*0.3 - group.rotation.y) * 0.03;
+    group.rotation.x += ((0.08 + mouseY*0.12) - group.rotation.x) * 0.03;
+
+    cards.forEach(c=>{
+      const a = c.userData.angle + t * c.userData.speed;
+      c.position.x = Math.cos(a) * c.userData.radius;
+      c.position.z = Math.sin(a) * c.userData.radius * 0.55;
+      c.position.y = Math.sin(a*1.3) * 0.6;
+      c.lookAt(camera.position);
+    });
+
+    stars.rotation.y += 0.00008;
+
+    renderer.render(scene, camera);
+  }
+  resize();
+  animate();
+})();
 </script>
 </body>
 </html>
