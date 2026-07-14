@@ -118,14 +118,20 @@
   /* ---------- HERO ---------- */
   .hero{position:relative;background:var(--hero-dark);overflow:hidden;}
   .hero-media{position:absolute;inset:0;}
-  @media (max-width:760px){.hero-media{opacity:.5;}}
+  @media (max-width:760px){.hero-media{opacity:.85;}}
   .hero-media canvas{width:100%;height:100%;display:block;}
   .hero-overlay{
     position:absolute;inset:0;
-    background:linear-gradient(90deg, var(--hero-dark) 0%, var(--hero-dark) 34%, rgba(5,6,10,.6) 56%, rgba(5,6,10,.15) 78%, transparent 94%);
+    background:
+      radial-gradient(circle at 78% 60%, rgba(79,139,247,.16), transparent 55%),
+      linear-gradient(90deg, var(--hero-dark) 0%, var(--hero-dark) 34%, rgba(5,6,10,.6) 56%, rgba(5,6,10,.15) 78%, transparent 94%);
   }
-  @media (max-width:760px){.hero-overlay{background:rgba(5,6,10,.55);}}
+  @media (max-width:760px){.hero-overlay{background:
+      radial-gradient(circle at 25% 15%, rgba(139,108,246,.28), transparent 50%),
+      radial-gradient(circle at 85% 55%, rgba(79,139,247,.22), transparent 55%),
+      rgba(5,6,10,.4);}}
   .hero-content{position:relative;z-index:2;padding:96px 0 84px;}
+  .hero h1,.hero .eyebrow,.hero .sub{text-shadow:0 2px 20px rgba(0,0,0,.35);}
   @media (max-width:760px){.hero-content{padding:52px 0 32px;}}
   .hero-content .eyebrow{color:rgba(255,255,255,.55);}
   .hero h1{color:#fff;font-size:clamp(38px,6vw,72px);max-width:600px;margin-bottom:22px;}
@@ -185,18 +191,25 @@
   }
 
   /* ---------- TRUST SECTION ---------- */
-  .trust-section{background:var(--panel);border-bottom:1px solid var(--line-soft);padding:40px 0;}
+  .trust-section{background:var(--bg);border-bottom:1px solid var(--line-soft);padding:44px 0;}
   .trust-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
-  @media (max-width:700px){.trust-grid{grid-template-columns:repeat(2,1fr);gap:14px;}
+  @media (max-width:700px){.trust-grid{grid-template-columns:repeat(2,1fr);gap:12px;}
     .trust-section{padding:28px 0;}}
-  .trust-card{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:6px;}
+  .trust-card{
+    background:var(--panel);border-radius:18px;padding:24px 14px;
+    box-shadow:0 1px 3px rgba(0,0,0,.05), 0 8px 24px rgba(0,0,0,.06);
+    display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;
+    transition:transform .3s cubic-bezier(.16,.84,.44,1), box-shadow .3s;
+  }
+  .trust-card:hover{transform:translateY(-5px);box-shadow:0 4px 10px rgba(0,0,0,.07), 0 16px 32px rgba(0,0,0,.1);}
   .trust-icon{
-    width:46px;height:46px;border-radius:50%;background:var(--bg);
-    display:flex;align-items:center;justify-content:center;font-size:20px;
+    width:52px;height:52px;border-radius:50%;background:var(--icon-grad);
+    display:flex;align-items:center;justify-content:center;font-size:22px;
+    box-shadow:0 8px 18px -4px var(--icon-shadow, rgba(0,0,0,.25));
   }
   .trust-card h6{font-size:13.5px;font-weight:600;}
   .trust-card p{font-size:11.5px;color:var(--text-secondary);}
-  @media (max-width:700px){.trust-icon{width:40px;height:40px;font-size:17px;}}
+  @media (max-width:700px){.trust-card{padding:20px 10px;}.trust-icon{width:44px;height:44px;font-size:19px;}}
 
   /* ---------- CATEGORIES ---------- */
   .cat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;}
@@ -404,22 +417,22 @@
   <div class="trust-section">
     <div class="wrap trust-grid">
       <div class="trust-card">
-        <span class="trust-icon">🚚</span>
+        <span class="trust-icon" style="--icon-grad:linear-gradient(135deg,#ff9966,#ff5e62);--icon-shadow:rgba(255,94,98,.35);">🚚</span>
         <h6>Fast Shipping</h6>
         <p>Free over £40, UK-wide</p>
       </div>
       <div class="trust-card">
-        <span class="trust-icon">🔒</span>
+        <span class="trust-icon" style="--icon-grad:linear-gradient(135deg,#4f8bf7,#4f6bf7);--icon-shadow:rgba(79,107,247,.35);">🔒</span>
         <h6>Secure Checkout</h6>
         <p>Encrypted end-to-end</p>
       </div>
       <div class="trust-card">
-        <span class="trust-icon">💳</span>
+        <span class="trust-icon" style="--icon-grad:linear-gradient(135deg,#34d399,#059669);--icon-shadow:rgba(5,150,105,.35);">💳</span>
         <h6>Secure Payment</h6>
         <p>3x interest-free</p>
       </div>
       <div class="trust-card">
-        <span class="trust-icon">⭐</span>
+        <span class="trust-icon" style="--icon-grad:linear-gradient(135deg,#fbbf24,#f59e0b);--icon-shadow:rgba(245,158,11,.35);">⭐</span>
         <h6>Customer Support</h6>
         <p>Real people, fast replies</p>
       </div>
@@ -777,20 +790,20 @@ revealEls.forEach(el=> io.observe(el));
 
   const glow = new THREE.Mesh(
     new THREE.SphereGeometry(2.2, 32, 32),
-    new THREE.MeshBasicMaterial({color:0x4f8bf7, transparent:true, opacity:0.045, side:THREE.BackSide})
+    new THREE.MeshBasicMaterial({color:0x4f8bf7, transparent:true, opacity:0.09, side:THREE.BackSide})
   );
   group.add(glow);
 
   const ring = new THREE.Mesh(
-    new THREE.TorusGeometry(3.6, 0.011, 16, 160),
-    new THREE.MeshStandardMaterial({color:0x8b6cf6, emissive:0x4f8bf7, emissiveIntensity:0.6, roughness:0.4, transparent:true, opacity:0.55})
+    new THREE.TorusGeometry(3.6, 0.016, 16, 160),
+    new THREE.MeshStandardMaterial({color:0x8b6cf6, emissive:0x4f8bf7, emissiveIntensity:1.1, roughness:0.4, transparent:true, opacity:0.85})
   );
   ring.rotation.x = Math.PI / 2.4;
   ring.rotation.z = 0.15;
   group.add(ring);
 
-  // starfield — sparse and subtle
-  const starCount = 260;
+  // starfield
+  const starCount = 420;
   const starPositions = new Float32Array(starCount * 3);
   for(let i = 0; i < starCount; i++){
     starPositions[i*3]   = (Math.random()-0.5) * 32;
@@ -799,7 +812,7 @@ revealEls.forEach(el=> io.observe(el));
   }
   const starGeo = new THREE.BufferGeometry();
   starGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
-  const stars = new THREE.Points(starGeo, new THREE.PointsMaterial({color:0xffffff, size:0.035, transparent:true, opacity:0.35}));
+  const stars = new THREE.Points(starGeo, new THREE.PointsMaterial({color:0xffffff, size:0.04, transparent:true, opacity:0.55}));
   scene.add(stars);
 
   // orbiting category icons — simple stylised 3D shapes, one per world
@@ -884,12 +897,11 @@ revealEls.forEach(el=> io.observe(el));
   const cards = [];
   iconDefs.forEach((def, i)=>{
     const glow = new THREE.Mesh(
-      new THREE.CircleGeometry(0.4, 24),
-      new THREE.MeshBasicMaterial({color:def.color, transparent:true, opacity:0.08})
+      new THREE.CircleGeometry(0.46, 24),
+      new THREE.MeshBasicMaterial({color:def.color, transparent:true, opacity:0.16})
     );
     const icon = def.build(def.color);
-    icon.scale.setScalar(0.8);
-    icon.traverse(o=>{ if(o.material) o.material.opacity !== undefined && (o.material.transparent = true, o.material.opacity = 0.75); });
+    icon.scale.setScalar(0.95);
     const pivot = new THREE.Group();
     pivot.add(glow);
     pivot.add(icon);
