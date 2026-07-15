@@ -782,23 +782,38 @@ revealEls.forEach(el=> io.observe(el));
   }
   window.addEventListener('resize', resize);
 
-  scene.add(new THREE.AmbientLight(0xffffff, 0.38));
-  const key = new THREE.DirectionalLight(0xbfd0ff, 1.6);
+  scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+  const key = new THREE.DirectionalLight(0xbfd0ff, 1.9);
   key.position.set(-6, 3, 4);
   scene.add(key);
-  const rim = new THREE.DirectionalLight(0x8b6cf6, 1.1);
+  const rim = new THREE.DirectionalLight(0x8b6cf6, 1.4);
   rim.position.set(5, -2, -3);
   scene.add(rim);
+  const fill = new THREE.DirectionalLight(0x4f8bf7, 0.35);
+  fill.position.set(2, -4, 5);
+  scene.add(fill);
+
+  // planet surface — subtle procedural bumps so it catches light like a real body
+  const planetGeo = new THREE.IcosahedronGeometry(2.1, 6);
+  const posAttr = planetGeo.attributes.position;
+  const v = new THREE.Vector3();
+  for(let i = 0; i < posAttr.count; i++){
+    v.fromBufferAttribute(posAttr, i);
+    const n = (Math.sin(v.x*3.1) + Math.sin(v.y*2.7) + Math.sin(v.z*3.9) + Math.sin((v.x+v.y)*4.3) + Math.sin((v.y-v.z)*5.1)) * 0.018;
+    v.normalize().multiplyScalar(2.1 + n);
+    posAttr.setXYZ(i, v.x, v.y, v.z);
+  }
+  planetGeo.computeVertexNormals();
 
   const planet = new THREE.Mesh(
-    new THREE.IcosahedronGeometry(2.1, 4),
-    new THREE.MeshStandardMaterial({color:0x1c2030, roughness:0.8, metalness:0.2})
+    planetGeo,
+    new THREE.MeshStandardMaterial({color:0x252b40, roughness:0.72, metalness:0.28})
   );
   group.add(planet);
 
   const glow = new THREE.Mesh(
-    new THREE.SphereGeometry(2.2, 32, 32),
-    new THREE.MeshBasicMaterial({color:0x4f8bf7, transparent:true, opacity:0.09, side:THREE.BackSide})
+    new THREE.SphereGeometry(2.24, 32, 32),
+    new THREE.MeshBasicMaterial({color:0x4f8bf7, transparent:true, opacity:0.1, side:THREE.BackSide})
   );
   group.add(glow);
 
@@ -905,17 +920,17 @@ revealEls.forEach(el=> io.observe(el));
   const cards = [];
   iconDefs.forEach((def, i)=>{
     const glow = new THREE.Mesh(
-      new THREE.CircleGeometry(0.46, 24),
+      new THREE.CircleGeometry(0.3, 24),
       new THREE.MeshBasicMaterial({color:def.color, transparent:true, opacity:0.16})
     );
     const icon = def.build(def.color);
-    icon.scale.setScalar(0.95);
+    icon.scale.setScalar(0.6);
     const pivot = new THREE.Group();
     pivot.add(glow);
     pivot.add(icon);
     const angle = (i / iconDefs.length) * Math.PI * 2;
     pivot.userData = {
-      angle, radius:2.7, speed:0.1 + i*0.014,
+      angle, radius:2.6, speed:0.1 + i*0.014,
       spinX: 0.004 + Math.random()*0.007,
       spinY: 0.007 + Math.random()*0.01,
     };
