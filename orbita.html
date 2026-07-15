@@ -793,13 +793,13 @@ revealEls.forEach(el=> io.observe(el));
   fill.position.set(2, -4, 5);
   scene.add(fill);
 
-  // shared noise fn — surface bumps, land/ocean colouring and city-light placement all use it
+  // shared noise fn (raw, ~-5..5) — surface bumps, land/ocean colouring and city-light placement all use it
   function surfaceNoise(p){
-    return (Math.sin(p.x*3.1) + Math.sin(p.y*2.7) + Math.sin(p.z*3.9) + Math.sin((p.x+p.y)*4.3) + Math.sin((p.y-p.z)*5.1)) * 0.018;
+    return Math.sin(p.x*3.1) + Math.sin(p.y*2.7) + Math.sin(p.z*3.9) + Math.sin((p.x+p.y)*4.3) + Math.sin((p.y-p.z)*5.1);
   }
 
-  // planet surface — procedural bumps + ocean/land vertex colouring, Earth-like glow
-  const planetGeo = new THREE.IcosahedronGeometry(2.1, 6);
+  // planet surface — near-smooth (HD) sphere with rich ocean/land vertex colouring, Earth-like glow
+  const planetGeo = new THREE.SphereGeometry(2.1, 96, 96);
   const posAttr = planetGeo.attributes.position;
   const colors = new Float32Array(posAttr.count * 3);
   const oceanColor = new THREE.Color(0x0e4d82);
@@ -808,9 +808,9 @@ revealEls.forEach(el=> io.observe(el));
   for(let i = 0; i < posAttr.count; i++){
     v.fromBufferAttribute(posAttr, i);
     const n = surfaceNoise(v);
-    v.normalize().multiplyScalar(2.1 + n);
+    v.normalize().multiplyScalar(2.1 + n*0.006);
     posAttr.setXYZ(i, v.x, v.y, v.z);
-    const t = THREE.MathUtils.clamp((n + 0.05) / 0.1, 0, 1);
+    const t = THREE.MathUtils.clamp((n + 1.4) / 2.8, 0, 1);
     const c = oceanColor.clone().lerp(landColor, t);
     colors[i*3] = c.r; colors[i*3+1] = c.g; colors[i*3+2] = c.b;
   }
@@ -831,8 +831,8 @@ revealEls.forEach(el=> io.observe(el));
     clTries++;
     const p = new THREE.Vector3(Math.random()-0.5, Math.random()-0.5, Math.random()-0.5).normalize();
     const n = surfaceNoise(p);
-    if(n > 0.008){
-      p.multiplyScalar(2.11 + n);
+    if(n > 0.7){
+      p.multiplyScalar(2.11 + n*0.006);
       cityLightPositions.push(p.x, p.y, p.z);
     }
   }
