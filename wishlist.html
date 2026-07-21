@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Wishlist — ÓRBITA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<main>
+  <div class="wrap">
+    <div class="breadcrumb">
+      <a href="orbita.html">Home</a> <span class="sep">/</span> <span class="current">Wishlist</span>
+    </div>
+    <div class="section-head" style="text-align:left;margin:0 0 30px;max-width:none;">
+      <h2 style="font-size:clamp(26px,4vw,38px);">Your Wishlist</h2>
+    </div>
+  </div>
+
+  <section class="wrap" style="padding-top:0;padding-bottom:90px;">
+    <div class="products-grid" id="wishlist-grid"></div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+
+<script src="assets/js/layout.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/store.js"></script>
+<script>
+function render(){
+  const ids = getWishlist();
+  const items = ids.map(getProduct).filter(Boolean);
+  const grid = document.getElementById('wishlist-grid');
+  if(items.length === 0){
+    grid.innerHTML = `
+      <div class="empty-state" style="grid-column:1/-1;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+        <h3>Your wishlist is empty</h3>
+        <p>Tap the heart icon on any product to save it here for later.</p>
+        <a href="category.html" class="btn-primary" style="justify-content:center;">Browse Products</a>
+      </div>`;
+    return;
+  }
+  renderProductGrid(grid, items);
+}
+
+document.addEventListener('click', (e)=>{
+  if(e.target.closest('.product-fav')) setTimeout(render, 0);
+});
+
+render();
+</script>
+</body>
+</html>

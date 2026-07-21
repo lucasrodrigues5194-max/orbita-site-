@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="page-title">Shop — ÓRBITA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<main>
+  <div class="wrap">
+    <div class="breadcrumb" id="breadcrumb"></div>
+  </div>
+
+  <div class="wrap" id="category-hero-slot"></div>
+
+  <section class="wrap" style="padding-top:0;">
+    <div class="toolbar">
+      <div class="toolbar-filters" id="filter-chips">
+        <button class="filter-chip active" data-max="Infinity">All prices</button>
+        <button class="filter-chip" data-max="25">Under £25</button>
+        <button class="filter-chip" data-min="25" data-max="50">£25 – £50</button>
+        <button class="filter-chip" data-min="50" data-max="Infinity">£50+</button>
+      </div>
+      <div class="toolbar-right">
+        <span class="result-count" id="result-count"></span>
+        <select class="sort-select" id="sort-select">
+          <option value="featured">Sort: Featured</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="name-asc">Name: A–Z</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="products-grid" id="products-grid"></div>
+
+    <div class="load-more-wrap" id="load-more-wrap">
+      <button class="btn-secondary" id="load-more-btn">Load More</button>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+
+<script src="assets/js/layout.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/store.js"></script>
+<script>
+const params = new URLSearchParams(window.location.search);
+const catId = params.get('cat');
+const searchQuery = params.get('search');
+const category = catId ? getCategory(catId) : null;
+
+let baseList;
+let heroTitle, heroDesc, heroBanner, heroAccent;
+
+if(searchQuery){
+  baseList = searchProducts(searchQuery);
+  heroTitle = `Search results for "${searchQuery}"`;
+  heroDesc = `${baseList.length} product${baseList.length === 1 ? '' : 's'} matching your search.`;
+  heroBanner = null;
+} else if(category){
+  baseList = getProductsByCategory(category.id);
+  heroTitle = category.name;
+  heroDesc = category.description;
+  heroBanner = category.banner;
+  heroAccent = category.accent;
+} else {
+  baseList = PRODUCTS.slice();
+  heroTitle = 'All Products';
+  heroDesc = 'Every product across the five worlds of ÓRBITA, in one place.';
+  heroBanner = null;
+}
+
+document.getElementById('page-title').textContent = `${heroTitle} — ÓRBITA`;
+
+/* ---------------- BREADCRUMB ---------------- */
+const crumbs = [`<a href="orbita.html">Home</a>`, `<span class="sep">/</span>`];
+if(category){
+  crumbs.push(`<span class="current">${category.name}</span>`);
+} else if(searchQuery){
+  crumbs.push(`<span class="current">Search</span>`);
+} else {
+  crumbs.push(`<span class="current">All Products</span>`);
+}
+document.getElementById('breadcrumb').innerHTML = crumbs.join(' ');
+
+/* ---------------- HERO BANNER ---------------- */
+const heroSlot = document.getElementById('category-hero-slot');
+if(heroBanner){
+  heroSlot.innerHTML = `
+    <div class="category-hero reveal" style="--accent:${heroAccent}">
+      <img src="${heroBanner}" alt="${heroTitle}">
+      <div class="category-hero-inner">
+        <div class="eyebrow-badge">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2Z"/></svg>
+          ${category.tagline}
+        </div>
+        <h1>${heroTitle}</h1>
+        <p>${heroDesc}</p>
+      </div>
+    </div>`;
+} else {
+  heroSlot.innerHTML = `
+    <div class="category-hero reveal" style="--accent:var(--blue);background:var(--hero-dark);">
+      <div class="category-hero-inner">
+        <h1>${heroTitle}</h1>
+        <p>${heroDesc}</p>
+      </div>
+    </div>`;
+}
+
+/* ---------------- FILTER + SORT + PAGINATE ---------------- */
+const PAGE_SIZE = 8;
+let priceMin = 0, priceMax = Infinity;
+let sortMode = 'featured';
+let visibleCount = PAGE_SIZE;
+
+function getFilteredSorted(){
+  let list = baseList.filter(p => p.price >= priceMin && p.price <= priceMax);
+  if(sortMode === 'price-asc') list = list.slice().sort((a,b)=> a.price - b.price);
+  else if(sortMode === 'price-desc') list = list.slice().sort((a,b)=> b.price - a.price);
+  else if(sortMode === 'name-asc') list = list.slice().sort((a,b)=> a.name.localeCompare(b.name));
+  return list;
+}
+
+function render(){
+  const filtered = getFilteredSorted();
+  const shown = filtered.slice(0, visibleCount);
+  renderProductGrid(document.getElementById('products-grid'), shown);
+
+  document.getElementById('result-count').textContent =
+    `${filtered.length} product${filtered.length === 1 ? '' : 's'}`;
+
+  const loadMoreWrap = document.getElementById('load-more-wrap');
+  loadMoreWrap.style.display = visibleCount < filtered.length ? 'block' : 'none';
+
+  initRevealObserver();
+}
+
+document.getElementById('filter-chips').addEventListener('click', (e)=>{
+  const chip = e.target.closest('.filter-chip');
+  if(!chip) return;
+  document.querySelectorAll('.filter-chip').forEach(c=> c.classList.remove('active'));
+  chip.classList.add('active');
+  priceMin = chip.dataset.min ? parseFloat(chip.dataset.min) : 0;
+  priceMax = chip.dataset.max ? parseFloat(chip.dataset.max) : Infinity;
+  visibleCount = PAGE_SIZE;
+  render();
+});
+
+document.getElementById('sort-select').addEventListener('change', (e)=>{
+  sortMode = e.target.value;
+  render();
+});
+
+document.getElementById('load-more-btn').addEventListener('click', ()=>{
+  visibleCount += PAGE_SIZE;
+  render();
+});
+
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="page-title">Product — ÓRBITA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<main>
+  <div class="wrap">
+    <div class="breadcrumb" id="breadcrumb"></div>
+  </div>
+
+  <div class="wrap" id="product-slot"></div>
+
+  <div class="wrap" id="related-slot"></div>
+</main>
+
+<div id="site-footer"></div>
+
+<script src="assets/js/layout.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/store.js"></script>
+<script>
+const params = new URLSearchParams(window.location.search);
+const product = getProduct(params.get('id'));
+const productSlot = document.getElementById('product-slot');
+const relatedSlot = document.getElementById('related-slot');
+const breadcrumb = document.getElementById('breadcrumb');
+
+if(!product){
+  document.getElementById('page-title').textContent = 'Product not found — ÓRBITA';
+  breadcrumb.innerHTML = `<a href="orbita.html">Home</a> <span class="sep">/</span> <span class="current">Not found</span>`;
+  productSlot.innerHTML = `
+    <div class="empty-state">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5 14.5 14.5M14.5 9.5 9.5 14.5"/></svg>
+      <h3>We couldn't find that product</h3>
+      <p>It may have been removed or the link is out of date.</p>
+      <a href="category.html" class="btn-secondary">Browse all products</a>
+    </div>`;
+} else {
+  const category = getCategory(product.cat);
+  document.getElementById('page-title').textContent = `${product.name} — ÓRBITA`;
+
+  breadcrumb.innerHTML = `
+    <a href="orbita.html">Home</a> <span class="sep">/</span>
+    <a href="category.html?cat=${product.cat}">${category ? category.name : product.cat}</a> <span class="sep">/</span>
+    <span class="current">${product.name}</span>`;
+
+  const installments = (product.price/3).toLocaleString('en-GB', {minimumFractionDigits:2, maximumFractionDigits:2});
+  const specsRows = product.specs.map(([k,v])=> `<tr><td>${k}</td><td>${v}</td></tr>`).join('');
+
+  productSlot.innerHTML = `
+    <div class="product-page">
+      <div class="product-gallery reveal">
+        <div class="product-gallery-main" id="gallery-main">
+          <img src="${product.img}" alt="${product.name}" id="gallery-img">
+        </div>
+      </div>
+      <div class="product-info reveal">
+        <span class="product-tag" style="color:var(--${product.cat})">${category ? category.name : product.cat}</span>
+        <h1>${product.name}</h1>
+        <div class="product-stock"><span class="dot"></span>In stock, ready to ship</div>
+        <div class="product-price-row">
+          <span class="product-price">${formatGBP(product.price)}</span>
+        </div>
+        <span class="product-installments">or 3x £ ${installments} interest-free</span>
+        <p class="desc">${product.description}</p>
+
+        <div class="qty-row">
+          <div class="qty-stepper">
+            <button type="button" id="qty-minus" aria-label="Decrease quantity">–</button>
+            <span id="qty-value">1</span>
+            <button type="button" id="qty-plus" aria-label="Increase quantity">+</button>
+          </div>
+          <button class="wishlist-toggle ${isWishlisted(product.id) ? 'active' : ''}" id="wishlist-toggle" data-id="${product.id}" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+            <span id="wishlist-toggle-label">${isWishlisted(product.id) ? 'In Wishlist' : 'Add to Wishlist'}</span>
+          </button>
+        </div>
+
+        <div class="product-cta-row">
+          <button class="btn-secondary" id="add-to-cart-btn" type="button">Add to Cart</button>
+          <a class="btn-primary" id="buy-now-btn" href="checkout.html">Buy Now
+            <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" stroke-width="1.6"/></svg>
+          </a>
+        </div>
+
+        <div class="tabs">
+          <div class="tab-buttons">
+            <button class="tab-btn active" data-tab="desc">Description</button>
+            <button class="tab-btn" data-tab="specs">Specifications</button>
+            <button class="tab-btn" data-tab="reviews">Reviews</button>
+          </div>
+          <div class="tab-panel active" data-tab="desc">${product.description}</div>
+          <div class="tab-panel" data-tab="specs">
+            <table class="specs-table">${specsRows}</table>
+          </div>
+          <div class="tab-panel" data-tab="reviews">
+            <div class="empty-state" style="padding:30px 10px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.1 6.6L12 17.5l-5.8 3.1 1.1-6.6-4.8-4.6 6.6-.9L12 2.5Z"/></svg>
+              <h3>No reviews yet</h3>
+              <p>Be the first to share what you think about this product.</p>
+              <button class="btn-secondary" id="write-review-btn" type="button">Write a Review</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+
+  /* gallery zoom */
+  document.getElementById('gallery-main').addEventListener('click', function(){
+    this.classList.toggle('zoomed');
+  });
+
+  /* quantity stepper */
+  let qty = 1;
+  const qtyValue = document.getElementById('qty-value');
+  document.getElementById('qty-minus').addEventListener('click', ()=>{
+    qty = Math.max(1, qty - 1);
+    qtyValue.textContent = qty;
+  });
+  document.getElementById('qty-plus').addEventListener('click', ()=>{
+    qty = Math.min(10, qty + 1);
+    qtyValue.textContent = qty;
+  });
+
+  /* add to cart */
+  document.getElementById('add-to-cart-btn').addEventListener('click', ()=>{
+    addToCart(product.id, qty);
+    showToast(`${product.name} added to cart`);
+  });
+
+  /* buy now: add then continue to checkout */
+  document.getElementById('buy-now-btn').addEventListener('click', ()=>{
+    addToCart(product.id, qty);
+  });
+
+  /* wishlist toggle (button lives outside the global delegated handler's default text, so refresh label) */
+  document.getElementById('wishlist-toggle').addEventListener('click', function(){
+    const active = this.classList.contains('active');
+    document.getElementById('wishlist-toggle-label').textContent = active ? 'In Wishlist' : 'Add to Wishlist';
+  });
+
+  /* write a review (demo) */
+  document.getElementById('write-review-btn').addEventListener('click', ()=>{
+    showToast('Reviews are coming soon — thanks for your interest!');
+  });
+
+  /* tabs */
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.tab-btn').forEach(b=> b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p=> p.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelector(`.tab-panel[data-tab="${btn.dataset.tab}"]`).classList.add('active');
+    });
+  });
+
+  /* related products */
+  const related = getRelatedProducts(product);
+  if(related.length){
+    relatedSlot.innerHTML = `
+      <div class="related-heading reveal"><h2>You may also like</h2></div>
+      <div class="products-grid reveal" id="related-grid"></div>`;
+    renderProductGrid(document.getElementById('related-grid'), related);
+  }
+
+  initRevealObserver();
+}
+</script>
+</body>
+</html>

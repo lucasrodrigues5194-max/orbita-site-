@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Cart — ÓRBITA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<main>
+  <div class="wrap">
+    <div class="breadcrumb">
+      <a href="orbita.html">Home</a> <span class="sep">/</span> <span class="current">Cart</span>
+    </div>
+    <div class="section-head" style="text-align:left;margin:0 0 30px;max-width:none;">
+      <h2 style="font-size:clamp(26px,4vw,38px);">Your Cart</h2>
+    </div>
+  </div>
+
+  <section class="wrap" style="padding-top:0;padding-bottom:80px;" id="cart-section"></section>
+</main>
+
+<div id="site-footer"></div>
+
+<script src="assets/js/layout.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/store.js"></script>
+<script>
+let appliedCoupon = null;
+
+function cartItemHTML(line){
+  const p = line.product;
+  return `
+    <div class="cart-item" data-id="${p.id}">
+      <a href="product.html?id=${p.id}" class="cart-item-media"><img src="${p.img}" alt="${p.name}"></a>
+      <div class="cart-item-info">
+        <span class="product-tag" style="color:var(--${p.cat})">${getCategory(p.cat) ? getCategory(p.cat).name : p.cat}</span>
+        <h4><a href="product.html?id=${p.id}">${p.name}</a></h4>
+        <div class="cart-item-price">${formatGBP(p.price)}</div>
+      </div>
+      <div class="cart-item-actions">
+        <div class="qty-stepper">
+          <button type="button" class="qty-minus" data-id="${p.id}" aria-label="Decrease quantity">–</button>
+          <span>${line.qty}</span>
+          <button type="button" class="qty-plus" data-id="${p.id}" aria-label="Increase quantity">+</button>
+        </div>
+        <button class="cart-item-remove" data-id="${p.id}" type="button">Remove</button>
+      </div>
+    </div>`;
+}
+
+function render(){
+  const lines = getCartLines();
+  const section = document.getElementById('cart-section');
+
+  if(lines.length === 0){
+    section.innerHTML = `
+      <div class="empty-state">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <h3>Your cart is empty</h3>
+        <p>Looks like you haven't added anything yet. Explore the catalogue and find something you'll love.</p>
+        <a href="category.html" class="btn-primary" style="justify-content:center;">Start Shopping</a>
+      </div>`;
+    return;
+  }
+
+  const subtotal = getCartSubtotal();
+  const discount = appliedCoupon ? subtotal * COUPONS[appliedCoupon] : 0;
+  const shipping = (subtotal - discount) >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FLAT;
+  const total = subtotal - discount + shipping;
+
+  section.innerHTML = `
+    <div class="cart-page">
+      <div class="cart-list">${lines.map(cartItemHTML).join('')}</div>
+      <div class="cart-summary">
+        <h3>Order Summary</h3>
+        <div class="summary-row"><span>Subtotal</span><span>${formatGBP(subtotal)}</span></div>
+        ${discount > 0 ? `<div class="summary-row"><span>Coupon (${appliedCoupon})</span><span class="discount-value">−${formatGBP(discount)}</span></div>` : ''}
+        <div class="summary-row"><span>Shipping</span><span>${shipping === 0 ? 'Free' : formatGBP(shipping)}</span></div>
+        <div class="coupon-row">
+          <input type="text" id="coupon-input" placeholder="Coupon code" value="${appliedCoupon || ''}">
+          <button class="coupon-btn" id="coupon-btn" type="button">Apply</button>
+        </div>
+        <div id="coupon-msg"></div>
+        <div class="summary-row total"><span>Total</span><span>${formatGBP(total)}</span></div>
+        <a href="checkout.html" class="btn-primary" style="width:100%;justify-content:center;margin-top:20px;">
+          Proceed to Checkout
+          <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" stroke-width="1.6"/></svg>
+        </a>
+      </div>
+    </div>`;
+
+  document.getElementById('coupon-btn').addEventListener('click', ()=>{
+    const code = document.getElementById('coupon-input').value.trim().toUpperCase();
+    const msg = document.getElementById('coupon-msg');
+    if(COUPONS[code]){
+      appliedCoupon = code;
+      render();
+    } else {
+      msg.className = 'coupon-msg error';
+      msg.textContent = code ? 'Invalid coupon code.' : 'Enter a coupon code first.';
+    }
+  });
+}
+
+document.getElementById('cart-section').addEventListener('click', (e)=>{
+  const minus = e.target.closest('.qty-minus');
+  const plus = e.target.closest('.qty-plus');
+  const remove = e.target.closest('.cart-item-remove');
+  if(minus){
+    const line = getCart().find(l=>l.id===minus.dataset.id);
+    if(line) setCartQty(minus.dataset.id, line.qty - 1);
+    render();
+  } else if(plus){
+    const line = getCart().find(l=>l.id===plus.dataset.id);
+    if(line) setCartQty(plus.dataset.id, line.qty + 1);
+    render();
+  } else if(remove){
+    removeFromCart(remove.dataset.id);
+    showToast('Item removed from cart');
+    render();
+  }
+});
+
+render();
+</script>
+</body>
+</html>

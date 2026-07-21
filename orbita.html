@@ -7,386 +7,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg:#eef0f2;
-    --bg-alt:#e3e5e9;
-    --panel:#ffffff;
-    --media-bg:#f5f5f6;
-    --text:#1d1d1f;
-    --text-secondary:#6e6e73;
-    --blue:#4f6bf7;
-    --grad:linear-gradient(90deg,#8b6cf6,#4f8bf7);
-    --line:rgba(0,0,0,.1);
-    --line-soft:rgba(0,0,0,.07);
-    --hero-dark:#05060a;
-
-    --home:#9c6b17;
-    --tech:#1f8880;
-    --car:#c1443b;
-    --office:#5f52c9;
-    --travel:#2f7a52;
-
-    --display:'Inter Tight', Inter, sans-serif;
-    --body:'Inter', sans-serif;
-  }
-
-  *{margin:0;padding:0;box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
-  body{
-    background:var(--bg);
-    color:var(--text);
-    font-family:var(--body);
-    -webkit-font-smoothing:antialiased;
-    overflow-x:hidden;
-  }
-  ::selection{background:var(--text);color:var(--panel);}
-  a{color:inherit;text-decoration:none;}
-  img{display:block;max-width:100%;}
-  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
-
-  .wrap{max-width:1160px;margin:0 auto;padding:0 22px;}
-
-  h1,h2,h3{font-family:var(--display);font-weight:600;letter-spacing:-.03em;line-height:1.06;}
-
-  .eyebrow{
-    font-size:13px;font-weight:600;color:var(--blue);
-    text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px;
-  }
-
-  section{padding:120px 0;}
-  .bg-alt{background:var(--panel);}
-  @media (max-width:760px){
-    section{padding:56px 0;}
-    .quote-section{padding:64px 0 !important;}
-  }
-
-  .section-head{text-align:center;max-width:640px;margin:0 auto 64px;}
-  .section-head h2{font-size:clamp(30px,4.4vw,50px);margin-bottom:16px;}
-  .section-head p{color:var(--text-secondary);font-size:19px;line-height:1.5;}
-
-  /* ---------- REVEAL ---------- */
-  .reveal{opacity:0;transform:translateY(36px);transition:opacity .9s cubic-bezier(.16,.84,.44,1),transform .9s cubic-bezier(.16,.84,.44,1);}
-  .reveal.in-view{opacity:1;transform:translateY(0);}
-
-  /* ---------- ANNOUNCE ---------- */
-  .announce{
-    background:#000;color:#fff;
-    text-align:center;font-size:12.5px;font-weight:500;letter-spacing:.01em;
-    padding:9px 40px 9px 16px;position:relative;
-  }
-  .announce-close{
-    position:absolute;right:14px;top:50%;transform:translateY(-50%);
-    font-size:15px;color:rgba(255,255,255,.55);line-height:1;padding:4px;
-  }
-  .announce-close:hover{color:#fff;}
-  .announce.hidden{display:none;}
-
-  /* ---------- NAV ---------- */
-  header{
-    position:sticky;top:0;left:0;right:0;z-index:100;
-    background:rgba(5,6,10,.78);
-    backdrop-filter:blur(16px) saturate(1.6);
-    border-bottom:1px solid rgba(255,255,255,.08);
-  }
-  nav{
-    display:flex;align-items:center;justify-content:space-between;
-    padding:0 22px;max-width:1160px;margin:0 auto;height:56px;
-  }
-  .logo{font-family:var(--display);font-weight:700;font-size:17px;letter-spacing:-.01em;color:#fff;}
-  .nav-links{display:flex;gap:30px;}
-  @media (max-width:860px){.nav-links{display:none;}}
-  .nav-links a{
-    font-size:12px;font-weight:500;color:rgba(255,255,255,.65);
-    text-transform:uppercase;letter-spacing:.03em;
-    transition:color .2s;
-  }
-  .nav-links a:hover{color:#fff;}
-  .nav-actions{display:flex;align-items:center;gap:20px;}
-  .cart-btn{position:relative;display:flex;align-items:center;color:#fff;}
-  .cart-btn svg{width:18px;height:18px;}
-  .cart-count{
-    position:absolute;top:-8px;right:-9px;background:var(--grad);color:#fff;
-    font-size:9.5px;font-weight:700;width:16px;height:16px;border-radius:50%;
-    display:flex;align-items:center;justify-content:center;
-    transition:transform .2s;
-  }
-  .cart-count.bump{transform:scale(1.3);}
-  .nav-cta{font-size:12px;font-weight:500;color:rgba(255,255,255,.65);}
-  .nav-cta:hover{color:#fff;}
-
-  /* ---------- HERO ---------- */
-  .hero{position:relative;background:var(--hero-dark);overflow:hidden;}
-  .hero-media{position:absolute;inset:0;}
-  @media (max-width:760px){.hero-media{opacity:.85;}}
-  .hero-media canvas{width:100%;height:100%;display:block;}
-  .hero-overlay{
-    position:absolute;inset:0;
-    background:
-      radial-gradient(circle at 78% 60%, rgba(79,139,247,.16), transparent 55%),
-      linear-gradient(90deg, var(--hero-dark) 0%, var(--hero-dark) 34%, rgba(5,6,10,.6) 56%, rgba(5,6,10,.15) 78%, transparent 94%);
-  }
-  @media (max-width:760px){.hero-overlay{background:
-      radial-gradient(circle at 25% 15%, rgba(139,108,246,.28), transparent 50%),
-      radial-gradient(circle at 85% 55%, rgba(79,139,247,.22), transparent 55%),
-      rgba(5,6,10,.4);}}
-  .hero-content{position:relative;z-index:2;padding:96px 0 84px;}
-  .hero h1,.hero .eyebrow,.hero .sub{text-shadow:0 2px 20px rgba(0,0,0,.35);}
-  @media (max-width:760px){.hero-content{padding:52px 0 32px;}}
-  .hero-content .eyebrow{color:rgba(255,255,255,.55);}
-  .eyebrow-badge{
-    display:inline-flex;align-items:center;gap:7px;
-    border:1px solid rgba(255,255,255,.18);border-radius:999px;background:rgba(255,255,255,.04);
-    padding:6px 14px;font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
-    color:rgba(255,255,255,.75);margin-bottom:20px;
-  }
-  .eyebrow-badge svg{width:12px;height:12px;color:#8b6cf6;}
-  .hero h1{color:#fff;font-size:clamp(38px,6vw,72px);max-width:600px;margin-bottom:22px;}
-  @media (max-width:760px){.hero h1{font-size:clamp(32px,8vw,44px);margin-bottom:14px;}}
-  .hero h1 .grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;}
-  .hero .sub{color:rgba(255,255,255,.6);font-size:clamp(16px,1.6vw,19px);max-width:460px;margin-bottom:38px;line-height:1.55;font-weight:400;}
-  @media (max-width:760px){.hero .sub{font-size:15.5px;margin-bottom:24px;}}
-  .hero-actions{display:flex;align-items:center;gap:28px;flex-wrap:wrap;}
-  @media (max-width:480px){
-    .hero-actions{flex-direction:column;align-items:stretch;gap:16px;}
-    .btn-primary{justify-content:center;}
-  }
-  .btn-primary{
-    background:var(--grad);color:#fff;
-    padding:14px 28px;border-radius:980px;font-weight:600;font-size:14px;
-    text-transform:uppercase;letter-spacing:.04em;
-    transition:filter .2s, transform .2s;display:inline-flex;align-items:center;gap:10px;
-  }
-  .btn-primary:hover{filter:brightness(1.1);transform:translateY(-1px);}
-  .link-chevron{
-    font-size:15px;font-weight:500;color:#fff;
-    display:inline-flex;align-items:center;gap:4px;
-  }
-  .link-chevron .chev{transition:transform .2s;}
-  .link-chevron:hover .chev{transform:translateX(3px);}
-
-  /* ---------- NICHE GRID (3D object on a glowing pedestal) ---------- */
-  .niche-grid{
-    position:relative;z-index:2;display:grid;grid-template-columns:repeat(5,1fr);
-    gap:10px;margin-top:6px;
-  }
-  .niche-card{
-    border:1px solid rgba(255,255,255,.14);border-radius:18px;background:rgba(255,255,255,.025);
-    display:flex;flex-direction:column;align-items:center;gap:10px;
-    padding:16px 8px 18px;text-align:center;transition:background .25s,border-color .25s,transform .25s;
-    overflow:hidden;
-  }
-  .niche-card:hover{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.3);transform:translateY(-4px);}
-  .niche-stage{position:relative;width:100%;aspect-ratio:194/260;max-height:140px;border-radius:12px;overflow:hidden;}
-  .niche-stage img{width:100%;height:100%;object-fit:cover;display:block;}
-  .niche-card .niche-label{
-    display:flex;align-items:center;gap:6px;color:#fff;font-size:13px;font-weight:600;
-  }
-  .niche-card .niche-label svg{width:11px;height:11px;color:var(--accent);transition:transform .2s;}
-  .niche-card:hover .niche-label svg{transform:translateX(3px);}
-  @media (max-width:640px){
-    .niche-grid{gap:6px;}
-    .niche-card{padding:10px 4px 12px;border-radius:13px;gap:6px;}
-    .niche-stage{max-height:78px;}
-    .niche-card .niche-label{font-size:9.5px;gap:3px;}
-    .niche-card .niche-label svg{width:8px;height:8px;}
-  }
-
-  /* ---------- TRUST BAR (dark, inside hero) ---------- */
-  .trust-bar-dark{
-    position:relative;z-index:2;margin-top:12px;
-    border:1px solid rgba(255,255,255,.15);border-radius:16px;background:rgba(255,255,255,.03);
-    display:flex;
-  }
-  .trust-bar-dark .t-item{
-    flex:1;display:flex;align-items:center;gap:10px;padding:16px 14px;
-    border-right:1px solid rgba(255,255,255,.12);
-  }
-  .trust-bar-dark .t-item:last-child{border-right:none;}
-  .trust-bar-dark svg{width:19px;height:19px;flex-shrink:0;}
-  .trust-bar-dark h6{color:#fff;font-size:12px;font-weight:600;line-height:1.3;}
-  @media (max-width:640px){
-    .trust-bar-dark{flex-wrap:wrap;}
-    .trust-bar-dark .t-item{flex:0 0 50%;border-bottom:1px solid rgba(255,255,255,.12);}
-    .trust-bar-dark .t-item:nth-child(2n){border-right:none;}
-    .trust-bar-dark .t-item:nth-last-child(-n+2){border-bottom:none;}
-    .trust-bar-dark svg{width:17px;height:17px;}
-    .trust-bar-dark h6{font-size:11px;}
-  }
-
-  /* ---------- CATEGORIES ---------- */
-  .cat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;}
-  @media (max-width:900px){.cat-grid{grid-template-columns:repeat(2,1fr);}}
-  @media (max-width:520px){.cat-grid{grid-template-columns:1fr;}}
-  .cat-card{
-    background:var(--panel);border-radius:18px;padding:30px 24px;
-    box-shadow:0 1px 3px rgba(0,0,0,.05), 0 8px 24px rgba(0,0,0,.05);
-    display:flex;flex-direction:column;gap:14px;
-    transition:transform .3s cubic-bezier(.16,.84,.44,1), box-shadow .3s;
-  }
-  .cat-card:hover{transform:translateY(-6px);box-shadow:0 4px 10px rgba(0,0,0,.07), 0 16px 32px rgba(0,0,0,.09);}
-  .cat-dot{width:34px;height:34px;border-radius:50%;background:var(--accent);}
-  .cat-card h3{font-size:20px;}
-  .cat-card p{font-size:13.5px;color:var(--text-secondary);line-height:1.5;flex:1;}
-  .cat-card .cat-go{font-size:13px;font-weight:600;color:var(--accent);display:inline-flex;align-items:center;gap:5px;}
-
-  /* ---------- PRODUCTS ---------- */
-  .products-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:40px;flex-wrap:wrap;}
-  .products-head h2{font-size:clamp(26px,4vw,40px);margin-bottom:8px;}
-  .products-head p{color:var(--text-secondary);font-size:15px;max-width:440px;}
-  .view-all{color:var(--blue);font-weight:600;font-size:14px;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;}
-  .view-all svg{transition:transform .2s;}
-  .view-all:hover svg{transform:translateX(3px);}
-  @media (max-width:520px){.products-head{margin-bottom:28px;}}
-
-  .products-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
-  @media (max-width:960px){.products-grid{grid-template-columns:repeat(2,1fr);}}
-  @media (max-width:560px){.products-grid{grid-template-columns:1fr;}}
-
-  .product-card{
-    background:var(--panel);border-radius:20px;overflow:hidden;
-    display:flex;flex-direction:column;
-    box-shadow:0 1px 3px rgba(0,0,0,.05), 0 8px 24px rgba(0,0,0,.05);
-    transition:transform .3s cubic-bezier(.16,.84,.44,1), box-shadow .3s;
-  }
-  .product-card:hover{transform:translateY(-6px);box-shadow:0 4px 10px rgba(0,0,0,.07), 0 18px 34px rgba(0,0,0,.1);}
-  .product-media{
-    position:relative;aspect-ratio:1/1;background:var(--media-bg);
-    display:flex;align-items:center;justify-content:center;padding:20px;
-  }
-  .product-media img{width:100%;height:100%;object-fit:contain;border-radius:8px;}
-  .product-fav{
-    position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:50%;
-    background:#fff;display:flex;align-items:center;justify-content:center;
-    box-shadow:0 2px 8px rgba(0,0,0,.14);transition:transform .2s;
-  }
-  .product-fav:hover{transform:scale(1.08);}
-  .product-fav svg{width:16px;height:16px;stroke:var(--text);transition:fill .15s,stroke .15s;}
-  .product-fav.active svg{fill:#ef4444;stroke:#ef4444;}
-  .product-body{padding:20px 22px 24px;display:flex;flex-direction:column;gap:6px;flex:1;}
-  .product-tag{font-size:11.5px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.04em;}
-  .product-body h4{font-size:16px;font-weight:600;line-height:1.3;letter-spacing:-.01em;}
-  .product-stock{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-secondary);margin-top:2px;}
-  .product-stock .dot{width:6px;height:6px;border-radius:50%;background:#3cae5f;flex-shrink:0;}
-  .product-price{margin-top:8px;font-size:19px;font-weight:600;font-family:var(--display);}
-  .product-installments{font-size:12px;color:var(--text-secondary);margin-bottom:8px;}
-  .product-links{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:10px;}
-  .product-links button, .product-links a{font-size:14px;font-weight:500;color:var(--blue);display:inline-flex;align-items:center;gap:3px;}
-  .product-links button.added{color:#3cae5f;}
-
-  /* ---------- FEATURE ---------- */
-  .feature{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;}
-  @media (max-width:900px){.feature{grid-template-columns:1fr;gap:36px;}}
-  .feature.reverse .feature-copy{order:2;}
-  .feature.reverse .feature-visual{order:1;}
-  @media (max-width:900px){.feature.reverse .feature-copy,.feature.reverse .feature-visual{order:initial;}}
-  .feature-copy h2{font-size:clamp(28px,3.6vw,42px);margin-bottom:18px;}
-  .feature-copy p{color:var(--text-secondary);font-size:18px;line-height:1.6;max-width:440px;margin-bottom:26px;}
-  .feature-list{display:flex;flex-direction:column;gap:13px;margin-bottom:28px;}
-  .feature-list li{list-style:none;display:flex;gap:11px;font-size:15px;color:var(--text);align-items:flex-start;}
-  .feature-list li svg{width:17px;height:17px;flex-shrink:0;margin-top:2px;color:var(--blue);}
-
-  .feature-visual{
-    aspect-ratio:4/3;border-radius:24px;position:relative;overflow:hidden;
-    background:var(--visual-bg, var(--media-bg));
-  }
-  .feature-visual .blob{
-    position:absolute;inset:-30%;
-    background:radial-gradient(circle at 30% 30%, var(--accent), transparent 60%),
-               radial-gradient(circle at 75% 70%, var(--accent), transparent 55%);
-    opacity:.5;filter:blur(10px);
-    animation:drift 18s ease-in-out infinite alternate;
-  }
-  @keyframes drift{
-    from{transform:translate3d(0,0,0) scale(1);}
-    to{transform:translate3d(-2%,2%,0) scale(1.06);}
-  }
-
-  /* ---------- GALLERY ---------- */
-  .gallery-outer{overflow:hidden;position:relative;}
-  .gallery-outer::before,.gallery-outer::after{
-    content:'';position:absolute;top:0;bottom:0;width:80px;z-index:2;pointer-events:none;
-  }
-  .gallery-outer::before{left:0;background:linear-gradient(90deg,var(--panel),transparent);}
-  .gallery-outer::after{right:0;background:linear-gradient(-90deg,var(--panel),transparent);}
-  .gallery-track{display:flex;gap:16px;width:max-content;animation:scroll-x 46s linear infinite;}
-  .gallery-outer:hover .gallery-track{animation-play-state:paused;}
-  @keyframes scroll-x{from{transform:translateX(0);}to{transform:translateX(-50%);}}
-  .gallery-tile{
-    width:260px;height:300px;border-radius:20px;background:var(--bg);
-    box-shadow:0 1px 3px rgba(0,0,0,.05), 0 8px 24px rgba(0,0,0,.05);
-    padding:22px;display:flex;flex-direction:column;justify-content:flex-end;
-    flex-shrink:0;position:relative;
-  }
-  .gallery-tile .tag{
-    position:absolute;top:20px;left:22px;font-size:11px;font-weight:600;
-    letter-spacing:.04em;color:var(--accent);text-transform:uppercase;
-  }
-  .gallery-tile h4{font-size:16px;font-weight:600;margin-bottom:4px;}
-  .gallery-tile p{font-size:13px;color:var(--text-secondary);}
-
-  /* ---------- QUOTE ---------- */
-  .quote-section{padding:130px 0;text-align:center;}
-  blockquote{
-    font-family:var(--display);font-weight:600;font-size:clamp(24px,3.4vw,38px);
-    max-width:780px;margin:0 auto 24px;letter-spacing:-.02em;line-height:1.3;
-    transition:opacity .4s;
-  }
-  .quote-author{font-size:13px;color:var(--text-secondary);letter-spacing:.02em;font-weight:500;}
-
-  /* ---------- FOOTER ---------- */
-  footer{background:var(--bg-alt);border-top:1px solid var(--line-soft);padding:56px 0 24px;}
-  .footer-top{display:grid;grid-template-columns:1.3fr repeat(4,1fr);gap:32px;margin-bottom:44px;}
-  @media (max-width:800px){.footer-top{grid-template-columns:repeat(2,1fr);}}
-  .footer-brand p{color:var(--text-secondary);font-size:12.5px;line-height:1.6;max-width:240px;margin-top:12px;}
-  .footer-col h5{font-size:12px;font-weight:600;color:var(--text);margin-bottom:14px;}
-  .footer-col a{display:block;font-size:12.5px;color:var(--text-secondary);margin-bottom:10px;transition:color .2s;}
-  .footer-col a:hover{color:var(--text);}
-  .footer-bottom{
-    display:flex;justify-content:space-between;align-items:center;
-    padding-top:20px;border-top:1px solid var(--line-soft);
-    font-size:11.5px;color:var(--text-secondary);flex-wrap:wrap;gap:10px;
-  }
-
-  /* ---------- TOAST ---------- */
-  .toast{
-    position:fixed;bottom:26px;right:26px;z-index:200;
-    background:var(--text);color:#fff;padding:14px 20px;border-radius:12px;
-    font-size:13.5px;font-weight:500;display:flex;align-items:center;gap:10px;
-    transform:translateY(120%);opacity:0;transition:transform .35s ease,opacity .35s ease;
-    box-shadow:0 12px 30px rgba(0,0,0,.2);
-  }
-  .toast.show{transform:translateY(0);opacity:1;}
-  .toast svg{width:16px;height:16px;flex-shrink:0;}
-</style>
+<link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
 
-<div class="announce" id="announce">
-  <span id="announce-text">Free shipping over £40 across the UK.</span>
-  <button class="announce-close" id="announce-close" aria-label="Close">✕</button>
-</div>
-
-<header>
-  <nav>
-    <div class="logo">ÓRBITA</div>
-    <div class="nav-links">
-      <a href="#home">Home</a>
-      <a href="#tech">Tech</a>
-      <a href="#car">Car</a>
-      <a href="#office">Office</a>
-      <a href="#travel">Travel</a>
-      <a href="#produtos">Store</a>
-    </div>
-    <div class="nav-actions">
-      <button class="cart-btn" id="cart-btn" type="button" aria-label="Cart">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-        <span id="cart-count" class="cart-count">0</span>
-      </button>
-      <a href="#" class="nav-cta">Sign in</a>
-    </div>
-  </nav>
-</header>
+<div id="site-header"></div>
 
 <main>
   <!-- HERO -->
@@ -407,32 +32,32 @@
       </div>
     </div>
     <div class="wrap">
-      <div class="niche-grid" id="niche-grid">
-        <a href="#tech" class="niche-card" style="--accent:var(--tech)">
+      <div class="niche-grid">
+        <a href="category.html?cat=tech" class="niche-card" style="--accent:var(--tech)">
           <div class="niche-stage"><img src="assets/categories/tech.jpg" alt="Tech" loading="lazy"></div>
           <span class="niche-label">Tech
             <svg viewBox="0 0 14 10" fill="none"><path d="M1 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" stroke-width="1.8"/></svg>
           </span>
         </a>
-        <a href="#home" class="niche-card" style="--accent:var(--home)">
+        <a href="category.html?cat=home" class="niche-card" style="--accent:var(--home)">
           <div class="niche-stage"><img src="assets/categories/home.jpg" alt="Home" loading="lazy"></div>
           <span class="niche-label">Home
             <svg viewBox="0 0 14 10" fill="none"><path d="M1 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" stroke-width="1.8"/></svg>
           </span>
         </a>
-        <a href="#car" class="niche-card" style="--accent:var(--car)">
+        <a href="category.html?cat=car" class="niche-card" style="--accent:var(--car)">
           <div class="niche-stage"><img src="assets/categories/car.jpg" alt="Car" loading="lazy"></div>
           <span class="niche-label">Car
             <svg viewBox="0 0 14 10" fill="none"><path d="M1 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" stroke-width="1.8"/></svg>
           </span>
         </a>
-        <a href="#office" class="niche-card" style="--accent:var(--office)">
+        <a href="category.html?cat=office" class="niche-card" style="--accent:var(--office)">
           <div class="niche-stage"><img src="assets/categories/office.jpg" alt="Office" loading="lazy"></div>
           <span class="niche-label">Office
             <svg viewBox="0 0 14 10" fill="none"><path d="M1 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" stroke-width="1.8"/></svg>
           </span>
         </a>
-        <a href="#travel" class="niche-card" style="--accent:var(--travel)">
+        <a href="category.html?cat=travel" class="niche-card" style="--accent:var(--travel)">
           <div class="niche-stage"><img src="assets/categories/travel.jpg" alt="Travel" loading="lazy"></div>
           <span class="niche-label">Travel
             <svg viewBox="0 0 14 10" fill="none"><path d="M1 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" stroke-width="1.8"/></svg>
@@ -467,7 +92,7 @@
         <h2>Featured Products</h2>
         <p>Handpicked best sellers with premium quality and fast UK delivery.</p>
       </div>
-      <a href="#" class="view-all">View All
+      <a href="category.html" class="view-all">View All
         <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" stroke-width="1.6"/></svg>
       </a>
     </div>
@@ -481,7 +106,7 @@
       <p>Five categories, each with its own curation — no generic catalogue.</p>
     </div>
     <div class="cat-grid reveal">
-      <a href="#" class="cat-card" id="home" style="--accent:var(--home)">
+      <a href="category.html?cat=home" class="cat-card" style="--accent:var(--home)">
         <span class="cat-dot"></span>
         <div>
           <h3>Home</h3>
@@ -489,7 +114,7 @@
         </div>
         <span class="cat-go">View collection ›</span>
       </a>
-      <a href="#" class="cat-card" id="tech" style="--accent:var(--tech)">
+      <a href="category.html?cat=tech" class="cat-card" style="--accent:var(--tech)">
         <span class="cat-dot"></span>
         <div>
           <h3>Tech</h3>
@@ -497,7 +122,7 @@
         </div>
         <span class="cat-go">View collection ›</span>
       </a>
-      <a href="#" class="cat-card" id="car" style="--accent:var(--car)">
+      <a href="category.html?cat=car" class="cat-card" style="--accent:var(--car)">
         <span class="cat-dot"></span>
         <div>
           <h3>Car</h3>
@@ -505,7 +130,7 @@
         </div>
         <span class="cat-go">View collection ›</span>
       </a>
-      <a href="#" class="cat-card" id="office" style="--accent:var(--office)">
+      <a href="category.html?cat=office" class="cat-card" style="--accent:var(--office)">
         <span class="cat-dot"></span>
         <div>
           <h3>Office</h3>
@@ -513,7 +138,7 @@
         </div>
         <span class="cat-go">View collection ›</span>
       </a>
-      <a href="#" class="cat-card" id="travel" style="--accent:var(--travel)">
+      <a href="category.html?cat=travel" class="cat-card" style="--accent:var(--travel)">
         <span class="cat-dot"></span>
         <div>
           <h3>Travel</h3>
@@ -580,56 +205,33 @@
     <blockquote id="quote-text" class="reveal">I stopped shopping at five different stores. Now it's all through ÓRBITA, from the charger to the tyre.</blockquote>
     <div class="quote-author" id="quote-author">MARINA ALVES — CUSTOMER SINCE 2023</div>
   </section>
+
+  <!-- NEWSLETTER -->
+  <section class="newsletter">
+    <div class="wrap">
+      <h2>Stay in orbit</h2>
+      <p>New arrivals and offers, once in a while — no spam.</p>
+      <form class="newsletter-form" id="newsletter-form">
+        <input type="email" placeholder="you@example.com" required>
+        <button class="btn-primary" type="submit">Subscribe</button>
+      </form>
+      <p class="newsletter-note" id="newsletter-note">Demo form — connect this to an email provider (Klaviyo, Mailchimp…) to go live.</p>
+    </div>
+  </section>
 </main>
 
-<footer>
-  <div class="wrap">
-    <div class="footer-top">
-      <div class="footer-brand">
-        <div class="logo" style="color:var(--text);">ÓRBITA</div>
-        <p>One store, five worlds. Home, Tech, Car, Office and Travel — genuinely curated.</p>
-      </div>
-      <div class="footer-col">
-        <h5>Worlds</h5>
-        <a href="#home">Home</a>
-        <a href="#tech">Tech</a>
-        <a href="#car">Car</a>
-        <a href="#office">Office</a>
-        <a href="#travel">Travel</a>
-      </div>
-      <div class="footer-col">
-        <h5>Company</h5>
-        <a href="#">About</a>
-        <a href="#">Curation criteria</a>
-        <a href="#">Careers</a>
-      </div>
-      <div class="footer-col">
-        <h5>Support</h5>
-        <a href="#">Track order</a>
-        <a href="#">Returns & exchanges</a>
-        <a href="#">Contact us</a>
-      </div>
-      <div class="footer-col">
-        <h5>Legal</h5>
-        <a href="#">Privacy</a>
-        <a href="#">Terms of use</a>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>© 2026 ÓRBITA. All rights reserved.</span>
-      <span>Made for people who don't want five tabs open to buy five things.</span>
-    </div>
-  </div>
-</footer>
-
-<div class="toast" id="toast">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-  <span id="toast-text">Added to cart</span>
-</div>
+<div id="site-footer"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="assets/js/layout.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/store.js"></script>
+<script src="assets/js/hero3d.js"></script>
 <script>
-/* ---------------- DATA ---------------- */
+/* ---------------- FEATURED PRODUCTS (home shows first 4) ---------------- */
+renderProductGrid(document.getElementById('products-grid'), PRODUCTS.slice(0, 4));
+
+/* ---------------- GALLERY RENDER ---------------- */
 const galleryItems = [
   {tag:'Home',   title:'Reorganised kitchen', desc:'Organisation kit — London'},
   {tag:'Tech',   title:'Work setup',          desc:'Monitor stand — Manchester'},
@@ -638,105 +240,6 @@ const galleryItems = [
   {tag:'Travel', title:'Hiking backpack',      desc:'Technical luggage — Bristol'},
   {tag:'Home',   title:'Living room lighting', desc:'Floor lamp — Glasgow'},
 ];
-
-const quotes = [
-  {text:"I stopped shopping at five different stores. Now it's all through ÓRBITA, from the charger to the tyre.", author:'MARINA ALVES — CUSTOMER SINCE 2023'},
-  {text:"The curation is what makes the difference. I've never received a product that didn't match the description.", author:'THIAGO ROCHA — CUSTOMER SINCE 2024'},
-  {text:'Unified tracking saves an absurd amount of time when I order for home and car together.', author:'ISABELA COSTA — CUSTOMER SINCE 2022'},
-];
-
-const products = [
-  {cat:'Tech', accent:'var(--tech)', img:'assets/ugreen.jpg', name:'UGREEN 100W Fast Charging External Battery Power Bank 20000mAh', price:62.98},
-  {cat:'Tech', accent:'var(--tech)', img:'assets/baseus-earbuds.jpg', name:'Baseus EP10 ANC Wireless Earbuds | Bluetooth 6.0 | Noise Cancelling', price:39.99},
-  {cat:'Car', accent:'var(--car)', img:'assets/baseus-car-holder.jpg', name:'Baseus Magnetic Car Phone Holder | Universal Dashboard Mount', price:19.99},
-  {cat:'Tech', accent:'var(--tech)', img:'assets/baseus-usb-hub.jpg', name:'Baseus USB Hub 4 Port | High-Speed USB Adapter for Laptop & Tablet', price:24.99},
-  {cat:'Travel', accent:'var(--travel)', img:'assets/lencent-adapter.jpg', name:'LENCENT GaN Universal Travel Adapter 65W/100W Fast Charge', price:45.99},
-];
-
-function formatGBP(v){
-  return v.toLocaleString('en-GB', {minimumFractionDigits:2, maximumFractionDigits:2});
-}
-
-/* ---------------- PRODUCTS RENDER ---------------- */
-const productsGrid = document.getElementById('products-grid');
-products.forEach((p)=>{
-  const el = document.createElement('div');
-  el.className = 'product-card';
-  const installments = (p.price/3).toLocaleString('en-GB', {minimumFractionDigits:2, maximumFractionDigits:2});
-  el.innerHTML = `
-    <div class="product-media">
-      <button class="product-fav" type="button" aria-label="Save to wishlist">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg>
-      </button>
-      <img src="${p.img}" alt="${p.name}" loading="lazy">
-    </div>
-    <div class="product-body">
-      <span class="product-tag" style="color:${p.accent}">${p.cat}</span>
-      <h4>${p.name}</h4>
-      <div class="product-stock"><span class="dot"></span>In stock</div>
-      <div class="product-price">£ ${formatGBP(p.price)}</div>
-      <span class="product-installments">or 3x £ ${installments}</span>
-      <div class="product-links">
-        <a href="#" class="link-details">Learn more ›</a>
-        <button class="btn-add" data-name="${p.name}" type="button">Add to cart ›</button>
-      </div>
-    </div>`;
-  productsGrid.appendChild(el);
-});
-
-/* ---------------- CART ---------------- */
-let cartCount = 0;
-const cartCountEl = document.getElementById('cart-count');
-const toast = document.getElementById('toast');
-const toastText = document.getElementById('toast-text');
-let toastTimer = null;
-
-function addToCart(name, btn){
-  cartCount++;
-  cartCountEl.textContent = cartCount;
-  cartCountEl.classList.remove('bump');
-  void cartCountEl.offsetWidth;
-  cartCountEl.classList.add('bump');
-
-  toastText.textContent = `${name} added to cart`;
-  toast.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=> toast.classList.remove('show'), 2600);
-
-  if(btn){
-    const original = btn.textContent;
-    btn.classList.add('added');
-    btn.textContent = 'Added ✓';
-    setTimeout(()=>{ btn.classList.remove('added'); btn.textContent = original; }, 1400);
-  }
-}
-
-productsGrid.addEventListener('click', (e)=>{
-  const favBtn = e.target.closest('.product-fav');
-  if(favBtn){
-    e.preventDefault();
-    favBtn.classList.toggle('active');
-    return;
-  }
-  const btn = e.target.closest('.btn-add');
-  if(!btn) return;
-  e.preventDefault();
-  addToCart(btn.dataset.name, btn);
-});
-
-document.getElementById('cart-btn').addEventListener('click', ()=>{
-  toastText.textContent = cartCount > 0 ? `You have ${cartCount} item(s) in your cart` : 'Your cart is empty';
-  toast.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=> toast.classList.remove('show'), 2600);
-});
-
-/* ---------------- ANNOUNCE CLOSE ---------------- */
-document.getElementById('announce-close').addEventListener('click', ()=>{
-  document.getElementById('announce').classList.add('hidden');
-});
-
-/* ---------------- GALLERY RENDER ---------------- */
 const track = document.getElementById('gallery-track');
 const accentMap = {Home:'var(--home)',Tech:'var(--tech)',Car:'var(--car)',Office:'var(--office)',Travel:'var(--travel)'};
 [...galleryItems, ...galleryItems].forEach(item=>{
@@ -748,6 +251,11 @@ const accentMap = {Home:'var(--home)',Tech:'var(--tech)',Car:'var(--car)',Office
 });
 
 /* ---------------- QUOTE ROTATION ---------------- */
+const quotes = [
+  {text:"I stopped shopping at five different stores. Now it's all through ÓRBITA, from the charger to the tyre.", author:'MARINA ALVES — CUSTOMER SINCE 2023'},
+  {text:"The curation is what makes the difference. I've never received a product that didn't match the description.", author:'THIAGO ROCHA — CUSTOMER SINCE 2024'},
+  {text:'Unified tracking saves an absurd amount of time when I order for home and car together.', author:'ISABELA COSTA — CUSTOMER SINCE 2022'},
+];
 let qIndex = 0;
 const qText = document.getElementById('quote-text');
 const qAuthor = document.getElementById('quote-author');
@@ -763,257 +271,15 @@ setInterval(()=>{
   },400);
 },5000);
 
-/* ---------------- SCROLL REVEAL ---------------- */
-const revealEls = document.querySelectorAll('.reveal');
-const io = new IntersectionObserver((entries)=>{
-  entries.forEach(entry=>{
-    if(entry.isIntersecting){
-      entry.target.classList.add('in-view');
-      io.unobserve(entry.target);
-    }
-  });
-}, {threshold:.15, rootMargin:'0px 0px -60px 0px'});
-revealEls.forEach(el=> io.observe(el));
+/* ---------------- NEWSLETTER (demo, no backend) ---------------- */
+document.getElementById('newsletter-form').addEventListener('submit', (e)=>{
+  e.preventDefault();
+  showToast("Thanks! You're on the list.");
+  e.target.reset();
+});
 
-/* ---------------- SHARED 3D ICON BUILDERS (hero orbit + category cards) ---------------- */
-function makeIconMat(color){
-  return new THREE.MeshStandardMaterial({color, roughness:0.32, metalness:0.4});
-}
-
-function buildTechIcon(color){ // headphones
-  const mat = makeIconMat(color);
-  const g = new THREE.Group();
-  const band = new THREE.Mesh(new THREE.TorusGeometry(0.4, 0.045, 14, 32, Math.PI), mat);
-  band.rotation.z = Math.PI;
-  g.add(band);
-  const cupGeo = new THREE.CylinderGeometry(0.14, 0.14, 0.11, 18);
-  const cupL = new THREE.Mesh(cupGeo, mat); cupL.position.set(-0.4, -0.02, 0); cupL.rotation.z = Math.PI/2; g.add(cupL);
-  const cupR = cupL.clone(); cupR.position.x = 0.4; g.add(cupR);
-  return g;
-}
-
-function buildHomeIcon(color){ // little house
-  const mat = makeIconMat(color);
-  const g = new THREE.Group();
-  const base = new THREE.Mesh(new THREE.BoxGeometry(0.58, 0.4, 0.5), mat);
-  base.position.y = -0.08;
-  g.add(base);
-  const roof = new THREE.Mesh(new THREE.ConeGeometry(0.46, 0.36, 4), mat);
-  roof.rotation.y = Math.PI/4;
-  roof.position.y = 0.28;
-  g.add(roof);
-  return g;
-}
-
-function buildCarIcon(color){ // car silhouette
-  const mat = makeIconMat(color);
-  const g = new THREE.Group();
-  const body = new THREE.Mesh(new THREE.BoxGeometry(0.88, 0.26, 0.4), mat);
-  g.add(body);
-  const cabin = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.22, 0.36), mat);
-  cabin.position.y = 0.22;
-  g.add(cabin);
-  const wheelGeo = new THREE.CylinderGeometry(0.1, 0.1, 0.44, 14);
-  [-0.28, 0.28].forEach(x=>{
-    const w = new THREE.Mesh(wheelGeo, mat);
-    w.rotation.x = Math.PI/2;
-    w.position.set(x, -0.16, 0);
-    g.add(w);
-  });
-  return g;
-}
-
-function buildOfficeIcon(color){ // briefcase
-  const mat = makeIconMat(color);
-  const g = new THREE.Group();
-  const body = new THREE.Mesh(new THREE.BoxGeometry(0.66, 0.42, 0.16), mat);
-  g.add(body);
-  const handle = new THREE.Mesh(new THREE.TorusGeometry(0.13, 0.028, 10, 20, Math.PI), mat);
-  handle.position.y = 0.24;
-  handle.rotation.z = Math.PI;
-  g.add(handle);
-  return g;
-}
-
-function buildTravelIcon(color){ // suitcase
-  const mat = makeIconMat(color);
-  const g = new THREE.Group();
-  const body = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.62, 0.26), mat);
-  g.add(body);
-  const handle = new THREE.Mesh(new THREE.TorusGeometry(0.11, 0.024, 10, 20, Math.PI), mat);
-  handle.position.y = 0.4;
-  handle.rotation.z = Math.PI;
-  g.add(handle);
-  return g;
-}
-
-/* ---------------- HERO 3D — ORBITING PLANET ---------------- */
-(function(){
-  const canvas = document.getElementById('hero-canvas');
-  const stage = canvas.parentElement;
-  const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
-  renderer.setClearColor(0x000000, 0);
-  if('outputEncoding' in renderer) renderer.outputEncoding = THREE.sRGBEncoding;
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
-
-  const group = new THREE.Group();
-  group.rotation.x = 0.08;
-  scene.add(group);
-
-  function resize(){
-    const w = stage.clientWidth, h = stage.clientHeight;
-    renderer.setSize(w, h);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isSmallScreen ? 1.5 : 2));
-    const aspect = w / h;
-    camera.aspect = aspect;
-    if(aspect < 0.95){
-      // narrow / mobile viewport — centre the scene, drop it below the copy, back the camera way off so the whole planet fits in frame
-      group.position.x = 0;
-      group.position.y = -1.6;
-      camera.position.set(0, 0.6, Math.max(20, 8 / aspect));
-    } else {
-      group.position.y = 0;
-      // wide / desktop viewport — offset right so the planet sits behind the copy
-      group.position.x = Math.min(3.1, aspect * 1.9);
-      camera.position.set(0, 0.3, 9.5);
-    }
-    camera.updateProjectionMatrix();
-  }
-  window.addEventListener('resize', resize);
-
-  scene.add(new THREE.AmbientLight(0xbfe0ff, 0.5));
-  const key = new THREE.DirectionalLight(0xdff0ff, 2.1);
-  key.position.set(-6, 3, 4);
-  scene.add(key);
-  const rim = new THREE.DirectionalLight(0x6fc6ff, 1.6);
-  rim.position.set(5, -2, -3);
-  scene.add(rim);
-  const fill = new THREE.DirectionalLight(0x4f8bf7, 0.4);
-  fill.position.set(2, -4, 5);
-  scene.add(fill);
-
-  // planet — real NASA "Earth at night" texture (city lights), lower-poly on mobile for performance
-  const isSmallScreen = window.matchMedia('(max-width:760px)').matches;
-  const planetSegments = isSmallScreen ? 48 : 96;
-  const planetGeo = new THREE.SphereGeometry(2.1, planetSegments, planetSegments);
-
-  const texLoader = new THREE.TextureLoader();
-  const earthTex = texLoader.load('assets/textures/earth_lights.jpg');
-  if('encoding' in earthTex) earthTex.encoding = THREE.sRGBEncoding;
-  earthTex.anisotropy = isSmallScreen ? 1 : 4;
-
-  const planet = new THREE.Mesh(
-    planetGeo,
-    new THREE.MeshStandardMaterial({
-      map: earthTex,
-      emissiveMap: earthTex,
-      emissive: 0xffffff,
-      emissiveIntensity: 0.85,
-      roughness: 0.85,
-      metalness: 0.1,
-    })
-  );
-  group.add(planet);
-
-  // layered atmosphere glow for a brighter, bloom-like halo
-  const glow = new THREE.Mesh(
-    new THREE.SphereGeometry(2.28, 32, 32),
-    new THREE.MeshBasicMaterial({color:0x5bc4ff, transparent:true, opacity:0.24, side:THREE.BackSide})
-  );
-  group.add(glow);
-  const glowOuter = new THREE.Mesh(
-    new THREE.SphereGeometry(2.6, 32, 32),
-    new THREE.MeshBasicMaterial({color:0x4f8bf7, transparent:true, opacity:0.1, side:THREE.BackSide})
-  );
-  group.add(glowOuter);
-
-  const ring = new THREE.Mesh(
-    new THREE.TorusGeometry(3.6, 0.016, 16, 160),
-    new THREE.MeshStandardMaterial({color:0xbfe4ff, emissive:0x6fc6ff, emissiveIntensity:1.2, roughness:0.4, transparent:true, opacity:0.85})
-  );
-  ring.rotation.x = Math.PI / 2.4;
-  ring.rotation.z = 0.15;
-  group.add(ring);
-
-  // starfield
-  const starCount = isSmallScreen ? 180 : 420;
-  const starPositions = new Float32Array(starCount * 3);
-  for(let i = 0; i < starCount; i++){
-    starPositions[i*3]   = (Math.random()-0.5) * 32;
-    starPositions[i*3+1] = (Math.random()-0.5) * 20;
-    starPositions[i*3+2] = (Math.random()-0.5) * 18 - 4;
-  }
-  const starGeo = new THREE.BufferGeometry();
-  starGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
-  const stars = new THREE.Points(starGeo, new THREE.PointsMaterial({color:0xffffff, size:0.04, transparent:true, opacity:0.55}));
-  scene.add(stars);
-
-  // orbiting category icons — simple stylised 3D shapes, one per world (builders shared with the category cards below)
-  const iconDefs = [
-    {build:buildTechIcon,    color:0x1f8880},
-    {build:buildHomeIcon,    color:0x9c6b17},
-    {build:buildCarIcon,     color:0xc1443b},
-    {build:buildOfficeIcon,  color:0x5f52c9},
-    {build:buildTravelIcon,  color:0x2f7a52},
-  ];
-  const cards = [];
-  iconDefs.forEach((def, i)=>{
-    const glow = new THREE.Mesh(
-      new THREE.CircleGeometry(0.3, 24),
-      new THREE.MeshBasicMaterial({color:def.color, transparent:true, opacity:0.16})
-    );
-    const icon = def.build(def.color);
-    icon.scale.setScalar(0.6);
-    const pivot = new THREE.Group();
-    pivot.add(glow);
-    pivot.add(icon);
-    const angle = (i / iconDefs.length) * Math.PI * 2;
-    pivot.userData = {
-      angle, radius:2.6, speed:0.1 + i*0.014,
-      spinX: 0.004 + Math.random()*0.007,
-      spinY: 0.007 + Math.random()*0.01,
-    };
-    icon.rotation.set(Math.random()*Math.PI, Math.random()*Math.PI, 0);
-    group.add(pivot);
-    cards.push(pivot);
-  });
-
-  let mouseX = 0, mouseY = 0;
-  stage.addEventListener('mousemove', (e)=>{
-    const r = stage.getBoundingClientRect();
-    mouseX = ((e.clientX - r.left) / r.width - 0.5);
-    mouseY = ((e.clientY - r.top) / r.height - 0.5);
-  });
-
-  const clock = new THREE.Clock();
-  function animate(){
-    requestAnimationFrame(animate);
-    const t = clock.getElapsedTime();
-
-    planet.rotation.y += 0.0016;
-    ring.rotation.z += 0.0009;
-    group.rotation.y += (mouseX*0.3 - group.rotation.y) * 0.03;
-    group.rotation.x += ((0.08 + mouseY*0.12) - group.rotation.x) * 0.03;
-
-    cards.forEach(c=>{
-      const a = c.userData.angle + t * c.userData.speed;
-      c.position.x = Math.cos(a) * c.userData.radius;
-      c.position.z = Math.sin(a) * c.userData.radius * 0.55;
-      c.position.y = Math.sin(a*1.3) * 0.6;
-      const glow = c.children[0], icon = c.children[1];
-      glow.lookAt(camera.position);
-      icon.rotation.x += c.userData.spinX;
-      icon.rotation.y += c.userData.spinY;
-    });
-
-    stars.rotation.y += 0.00008;
-
-    renderer.render(scene, camera);
-  }
-  resize();
-  animate();
-})();
+/* re-run reveal observer now that featured products exist in the DOM */
+initRevealObserver();
 </script>
 </body>
 </html>
