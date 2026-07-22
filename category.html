@@ -20,18 +20,21 @@
 
   <div class="wrap" id="category-hero-slot"></div>
 
+  <div class="wrap" id="trust-row-slot"></div>
+
   <section class="wrap" style="padding-top:0;">
     <div class="toolbar">
-      <div class="toolbar-filters" id="filter-chips">
-        <button class="filter-chip active" data-max="Infinity">All prices</button>
-        <button class="filter-chip" data-max="25">Under £25</button>
-        <button class="filter-chip" data-min="25" data-max="50">£25 – £50</button>
-        <button class="filter-chip" data-min="50" data-max="Infinity">£50+</button>
+      <div class="toolbar-filters">
+        <button class="filter-toggle-btn" id="filter-toggle" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+          Filter
+        </button>
+        <div class="chip-group" id="filter-chips"></div>
       </div>
       <div class="toolbar-right">
         <span class="result-count" id="result-count"></span>
         <select class="sort-select" id="sort-select">
-          <option value="featured">Sort: Featured</option>
+          <option value="featured">Sort: Popular</option>
           <option value="price-asc">Price: Low to High</option>
           <option value="price-desc">Price: High to Low</option>
           <option value="name-asc">Name: A–Z</option>
@@ -42,7 +45,9 @@
     <div class="products-grid" id="products-grid"></div>
 
     <div class="load-more-wrap" id="load-more-wrap">
-      <button class="btn-secondary" id="load-more-btn">Load More</button>
+      <button class="btn-primary" id="load-more-btn">Load more products
+        <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" stroke-width="1.6"/></svg>
+      </button>
     </div>
   </section>
 </main>
@@ -99,10 +104,6 @@ if(heroBanner){
     <div class="category-hero reveal" style="--accent:${heroAccent}">
       <img src="${heroBanner}" alt="${heroTitle}">
       <div class="category-hero-inner">
-        <div class="eyebrow-badge">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2Z"/></svg>
-          ${category.tagline}
-        </div>
         <h1>${heroTitle}</h1>
         <p>${heroDesc}</p>
       </div>
@@ -117,14 +118,52 @@ if(heroBanner){
     </div>`;
 }
 
+/* ---------------- TRUST ROW ---------------- */
+const trustSlot = document.getElementById('trust-row-slot');
+if(category){
+  trustSlot.innerHTML = `
+    <div class="trust-row reveal">
+      <div class="tr-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.6 8 11 4.6-2.4 8-6 8-11V5l-8-3Z"/></svg>
+        <div><strong>Quality tested</strong><span>Only reliable products</span></div>
+      </div>
+      <div class="tr-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8 12 3 3 8l9 5 9-5Z"/><path d="M3 8v8l9 5 9-5V8M12 13v8"/></svg>
+        <div><strong>Handpicked</strong><span>${category.curatedFor}</span></div>
+      </div>
+      <div class="tr-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 3v5h5"/></svg>
+        <div><strong>30-day returns</strong><span>Hassle-free returns</span></div>
+      </div>
+      <div class="tr-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+        <div><strong>Secure checkout</strong><span>Your data is protected</span></div>
+      </div>
+    </div>`;
+}
+
+/* ---------------- FILTER CHIPS (subcategories) ---------------- */
+const toolbarFilters = document.querySelector('.toolbar-filters');
+if(category){
+  toolbarFilters.style.setProperty('--accent', category.accent);
+}
+const subcatOptions = category ? ['All', ...category.subcategories] : ['All'];
+document.getElementById('filter-chips').innerHTML = subcatOptions.map((s,i)=>
+  `<button class="filter-chip ${i===0 ? 'active' : ''}" data-subcat="${s}">${s}</button>`
+).join('');
+
+document.getElementById('filter-toggle').addEventListener('click', ()=>{
+  toolbarFilters.classList.toggle('filters-open');
+});
+
 /* ---------------- FILTER + SORT + PAGINATE ---------------- */
 const PAGE_SIZE = 8;
-let priceMin = 0, priceMax = Infinity;
+let subcatFilter = 'All';
 let sortMode = 'featured';
 let visibleCount = PAGE_SIZE;
 
 function getFilteredSorted(){
-  let list = baseList.filter(p => p.price >= priceMin && p.price <= priceMax);
+  let list = subcatFilter === 'All' ? baseList : baseList.filter(p => p.subcategory === subcatFilter);
   if(sortMode === 'price-asc') list = list.slice().sort((a,b)=> a.price - b.price);
   else if(sortMode === 'price-desc') list = list.slice().sort((a,b)=> b.price - a.price);
   else if(sortMode === 'name-asc') list = list.slice().sort((a,b)=> a.name.localeCompare(b.name));
@@ -150,8 +189,7 @@ document.getElementById('filter-chips').addEventListener('click', (e)=>{
   if(!chip) return;
   document.querySelectorAll('.filter-chip').forEach(c=> c.classList.remove('active'));
   chip.classList.add('active');
-  priceMin = chip.dataset.min ? parseFloat(chip.dataset.min) : 0;
-  priceMax = chip.dataset.max ? parseFloat(chip.dataset.max) : Infinity;
+  subcatFilter = chip.dataset.subcat;
   visibleCount = PAGE_SIZE;
   render();
 });
@@ -165,6 +203,10 @@ document.getElementById('load-more-btn').addEventListener('click', ()=>{
   visibleCount += PAGE_SIZE;
   render();
 });
+
+if(category){
+  document.getElementById('load-more-btn').style.background = category.accent;
+}
 
 render();
 </script>

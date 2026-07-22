@@ -18,6 +18,7 @@ const HEADER_HTML = `
       <a href="orbita.html" class="logo">ÓRBITA</a>
     </div>
     <div class="nav-links">
+      <a href="orbita.html">Home</a>
       <a href="category.html?cat=tech">Tech</a>
       <a href="category.html?cat=home">Home</a>
       <a href="category.html?cat=car">Car</a>
@@ -47,6 +48,7 @@ const HEADER_HTML = `
   </div>
   <div class="mobile-menu" id="mobile-menu">
     <div class="wrap mobile-menu-inner">
+      <a href="orbita.html">Home ›</a>
       <a href="category.html?cat=tech">Tech ›</a>
       <a href="category.html?cat=home">Home ›</a>
       <a href="category.html?cat=car">Car ›</a>

@@ -116,9 +116,26 @@ function showToast(message){
 function productCardHTML(p){
   const installments = (p.price/3).toLocaleString('en-GB', {minimumFractionDigits:2, maximumFractionDigits:2});
   const favActive = isWishlisted(p.id) ? 'active' : '';
+  const category = getCategory(p.cat);
+  const accent = category ? category.accent : `var(--${p.cat})`;
+  const tagText = p.subcategory || (category ? category.name : p.cat);
+  const discountPct = p.oldPrice ? Math.round((1 - p.price / p.oldPrice) * 100) : 0;
+
+  const ratingHTML = p.rating ? `
+        <div class="product-rating">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.1 6.6L12 17.5l-5.8 3.1 1.1-6.6-4.8-4.6 6.6-.9L12 2.5Z"/></svg>
+          <span class="rv">${p.rating.toFixed(1)}</span> (${p.reviewCount || 0})
+        </div>` : `
+        <div class="product-stock"><span class="dot"></span>In stock</div>`;
+
+  const priceHTML = p.oldPrice
+    ? `<div class="product-price-line"><span class="product-price">${formatGBP(p.price)}</span><span class="product-old-price">${formatGBP(p.oldPrice)}</span></div>`
+    : `<div class="product-price">${formatGBP(p.price)}</div>`;
+
   return `
     <div class="product-card" data-id="${p.id}">
-      <div class="product-media">
+      <div class="product-media" style="--accent:${accent}">
+        ${discountPct ? `<span class="discount-badge">-${discountPct}%</span>` : ''}
         <button class="product-fav ${favActive}" type="button" data-id="${p.id}" aria-label="Save to wishlist">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg>
         </button>
@@ -126,11 +143,10 @@ function productCardHTML(p){
         <button class="product-quickview" type="button" data-id="${p.id}">Quick View</button>
       </div>
       <div class="product-body">
-        <span class="product-tag" style="color:var(--${p.cat})">${getCategory(p.cat) ? getCategory(p.cat).name : p.cat}</span>
-        <h4><a href="product.html?id=${p.id}">${p.name}</a></h4>
-        <div class="product-stock"><span class="dot"></span>In stock</div>
-        <div class="product-price">${formatGBP(p.price)}</div>
-        <span class="product-installments">or 3x £ ${installments}</span>
+        <span class="product-tag" style="color:${accent}">${tagText}</span>
+        <h4><a href="product.html?id=${p.id}">${p.name}</a></h4>${ratingHTML}
+        ${priceHTML}
+        ${p.oldPrice ? '' : `<span class="product-installments">or 3x £ ${installments}</span>`}
         <div class="product-links">
           <a href="product.html?id=${p.id}">Learn more ›</a>
           <button class="btn-add" data-id="${p.id}" data-name="${p.name}" type="button">Add to cart ›</button>
@@ -194,10 +210,11 @@ function openQuickView(id){
   if(!p) return;
   const overlay = document.getElementById('quickview-overlay');
   if(!overlay) return;
+  const qvCategory = getCategory(p.cat);
   document.getElementById('qv-img').src = p.img;
   document.getElementById('qv-img').alt = p.name;
-  document.getElementById('qv-tag').textContent = getCategory(p.cat) ? getCategory(p.cat).name : p.cat;
-  document.getElementById('qv-tag').style.color = `var(--${p.cat})`;
+  document.getElementById('qv-tag').textContent = p.subcategory || (qvCategory ? qvCategory.name : p.cat);
+  document.getElementById('qv-tag').style.color = qvCategory ? qvCategory.accent : `var(--${p.cat})`;
   document.getElementById('qv-name').textContent = p.name;
   document.getElementById('qv-price').textContent = formatGBP(p.price);
   document.getElementById('qv-installments').textContent = `or 3x £ ${(p.price/3).toLocaleString('en-GB',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
